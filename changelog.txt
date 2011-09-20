@@ -5,6 +5,18 @@ SVN: https://svn.github.com/powerbot/RSBot
 Java JDK: http://www.oracle.com/technetwork/java/javase/downloads/
 
 
+v2.6.20
+Download: http://services.powerbot.org/rsbot/releases/RSBot-2620.jar
+MD5: 95e4b758b6a7eb073c6e3d5c3d385c3d
+SHA1: 2cef9ded56ba47eef165b07ca74c062d4259a6f9
+VirusTotal: http://www.virustotal.com/file-scan/report.html?id=fbc4dab8c327b92dc89864df4b0af9497ffe575a0b9b888b5be27cde03abfcd3-1316517560
+
+- New custom script list feature
+- Re-enabled black themes
+- Various performance improvements
+- Major fixes to random event handlers
+
+
 v2.61
 Download: http://services.powerbot.org/rsbot/releases/RSBot-261.jar
 MD5: b0c5e67699e515d8bd606b0f4e6c917b
