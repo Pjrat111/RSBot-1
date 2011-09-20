@@ -29,4 +29,14 @@ public final class UpdateChecker {
 		}
 		return latest;
 	}
+
+	public static String downloadLatest() {
+		final File cache = new File(Configuration.Paths.getCacheDirectory(), Configuration.NAME + "-" + Integer.toString(getLatestVersion()) + ".jar");
+		try {
+			HttpClient.download(new URL(Configuration.Paths.URLs.DOWNLOAD), cache);
+			return cache.getCanonicalPath();
+		} catch (final IOException ignored) {
+		}
+		return null;
+	}
 }

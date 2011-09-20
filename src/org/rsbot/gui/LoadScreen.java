@@ -8,6 +8,7 @@ import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.service.Preferences;
+import org.rsbot.util.StringUtil;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
@@ -88,8 +89,23 @@ public class LoadScreen extends JDialog {
 		log.info("Checking for updates");
 		String error = null;
 
-		if (Configuration.RUNNING_FROM_JAR && UpdateChecker.getLatestVersion() > Configuration.getVersion()) {
-			error = "Please update at " + Configuration.Paths.URLs.HOST;
+		if (UpdateChecker.getLatestVersion() > Configuration.getVersion()) {
+			if (Configuration.RUNNING_FROM_JAR) {
+				log.info("Downloading update v" + StringUtil.formatVersion(UpdateChecker.getLatestVersion()));
+				final String path = UpdateChecker.downloadLatest();
+				if (path == null || path.length() == 0 || !new File(path).isFile()) {
+					error = "Please update at " + Configuration.Paths.URLs.HOST;
+				} else {
+					try {
+						Runtime.getRuntime().exec("java -jar \"" + path + "\"");
+						System.exit(0);
+					} catch (final IOException ignored) {
+						error = "Please run the latest version";
+					}
+				}
+			} else {
+				error = "Please update your Git/SVN working copy";
+			}
 		}
 
 		log.info("Starting game client");

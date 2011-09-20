@@ -87,7 +87,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		for (final Class<?> c : new Class<?>[]{BotGUI.class, Configuration.class, JavaCompiler.class}) {
+		for (final Class<?> c : new Class<?>[]{BotGUI.class, Configuration.class, JavaCompiler.class, LoadScreen.class}) {
 			if (calling.startsWith(c.getName())) {
 				super.checkExec(cmd);
 				return;
