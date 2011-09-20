@@ -41,17 +41,32 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 
 	private static void parseManifests(final Map<String, Map<String, String>> entries, final List<ScriptDefinition> defs) {
 		for (final Entry<String, Map<String, String>> entry : entries.entrySet()) {
+			final Map<String, String> values = entry.getValue();
+			if (!values.containsKey("name") || !values.containsKey("authors")) {
+				continue;
+			}
 			final ScriptDefinition def = new ScriptDefinition();
 			def.path = entry.getKey();
-			final Map<String, String> values = entry.getValue();
-			def.id = values.containsKey("id") ? Integer.parseInt(values.get("id")) : 0;
-			def.crc32 = values.containsKey("crc32") ? Long.parseLong(values.get("crc32")) : 0;
 			def.name = values.get("name");
-			def.version = values.containsKey("version") ? Double.parseDouble(values.get("version")) : 1.0;
-			def.description = values.get("description");
 			def.authors = values.get("authors").split(DELIMITER);
-			def.keywords = values.get("keywords").split(DELIMITER);
-			def.website = values.get("website");
+			if (values.containsKey("id")) {
+				def.id = Integer.parseInt(values.get("id"));
+			}
+			if (values.containsKey("crc32")) {
+				def.crc32 = Long.parseLong(values.get("crc32"));
+			}
+			if (values.containsKey("version")) {
+				def.version = Double.parseDouble(values.get("version"));
+			}
+			if (values.containsKey("description")) {
+				def.description = values.get("description");
+			}
+			if (values.containsKey("keywords")) {
+				def.keywords = values.get("keywords").split(DELIMITER);
+			}
+			if (values.containsKey("website")) {
+				def.website = values.get("website");
+			}
 			defs.add(def);
 		}
 	}
