@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 	private static final Logger log = Logger.getLogger("ScriptDelivery");
+	private final static String DELIMITER = ",";
 	private static ScriptDeliveryNetwork instance;
 	private URL base;
 	private final File manifest = new File(Configuration.Paths.getCacheDirectory(), "sdn-manifests.txt");
@@ -48,8 +49,8 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 			def.name = values.get("name");
 			def.version = values.containsKey("version") ? Double.parseDouble(values.get("version")) : 1.0;
 			def.description = values.get("description");
-			def.authors = values.get("authors").split(ScriptList.DELIMITER);
-			def.keywords = values.get("keywords").split(ScriptList.DELIMITER);
+			def.authors = values.get("authors").split(DELIMITER);
+			def.keywords = values.get("keywords").split(DELIMITER);
 			def.website = values.get("website");
 			defs.add(def);
 		}
