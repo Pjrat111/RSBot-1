@@ -5,6 +5,15 @@ SVN: https://svn.github.com/powerbot/RSBot
 Java JDK: http://www.oracle.com/technetwork/java/javase/downloads/
 
 
+v2.6.21
+Download: http://services.powerbot.org/rsbot/releases/RSBot-2621.jar
+MD5: eaa24c8c1f57372c6658ce95dc5e264a
+SHA1: 4baecd3bbf1776cc5dc2e26898fca429de9800f6
+VirusTotal: http://www.virustotal.com/file-scan/report.html?id=150b1043f26c4c18e30272b5dd2573a50dc7957fdcb21c9928f096b986f56e8d-1316541811
+
+- Fixed security exception with web methods
+
+
 v2.6.20
 Download: http://services.powerbot.org/rsbot/releases/RSBot-2620.jar
 MD5: 95e4b758b6a7eb073c6e3d5c3d385c3d
