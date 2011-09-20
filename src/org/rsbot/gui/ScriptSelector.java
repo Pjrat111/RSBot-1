@@ -144,8 +144,15 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			@Override
 			public String getToolTipText(MouseEvent e) {
 				int row = rowAtPoint(e.getPoint());
-				ScriptDefinition def = model.getDefinition(row);
-				return def.toString();
+				if (row < 0) {
+					return "";
+				}
+				try {
+					ScriptDefinition def = model.getDefinition(row);
+					return def.toString();
+				} catch (final IndexOutOfBoundsException ignored) {
+					return "";
+				}
 			}
 		};
 		table.addMouseListener(new MouseAdapter() {
