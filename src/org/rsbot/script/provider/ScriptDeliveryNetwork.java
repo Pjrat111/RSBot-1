@@ -25,8 +25,10 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 	private static ScriptDeliveryNetwork instance;
 	private URL base;
 	private final File manifest = new File(Configuration.Paths.getCacheDirectory(), "sdn-manifests.txt");
+	private final FileScriptSource fileSource;
 
 	private ScriptDeliveryNetwork() {
+		fileSource = new FileScriptSource(new File(Configuration.Paths.getScriptsNetworkDirectory()));
 	}
 
 	public static ScriptDeliveryNetwork getInstance() {
@@ -61,9 +63,15 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 				log.warning("Unable to load scripts from the network");
 			}
 		}
+		if (base == null) {
+			log.warning("Attempting to use cached network scripts");
+		}
 	}
 
 	public List<ScriptDefinition> list() {
+		if (base == null) {
+			return fileSource.list();
+		}
 		final ArrayList<ScriptDefinition> defs = new ArrayList<ScriptDefinition>();
 		refresh(false);
 		try {
@@ -78,6 +86,13 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 	}
 
 	public Script load(final ScriptDefinition def) {
+		if (base == null) {
+			try {
+				return fileSource.load(def);
+			} catch (final Exception ignored) {
+				log.severe("Unable to load cached script");
+			}
+		}
 		final File cache = new File(Configuration.Paths.getScriptsNetworkDirectory(), def.path);
 		final LinkedList<ScriptDefinition> defs = new LinkedList<ScriptDefinition>();
 		try {
