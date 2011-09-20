@@ -112,4 +112,8 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 	public void run() {
 		refresh(true);
 	}
+
+	public boolean isAvailable() {
+		return base != null;
+	}
 }
