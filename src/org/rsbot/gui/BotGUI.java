@@ -430,7 +430,7 @@ public class BotGUI extends JFrame implements ActionListener, ScriptListener {
 		setJMenuBar(menuBar);
 		textScroll = new JScrollPane(TextAreaLogHandler.TEXT_AREA, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		textScroll.setBorder(null);
-		textScroll.setPreferredSize(new Dimension(PANEL_WIDTH, Configuration.RUNNING_FROM_JAR ? 60 : 120));
+		textScroll.setPreferredSize(new Dimension(PANEL_WIDTH, 120));
 		textScroll.setVisible(true);
 		JScrollPane scrollableBotPanel = new JScrollPane(panel);
 		add(toolBar, BorderLayout.NORTH);
