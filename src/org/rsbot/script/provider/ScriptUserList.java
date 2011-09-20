@@ -38,7 +38,7 @@ public final class ScriptUserList implements Runnable {
 	}
 
 	public boolean isAvailable() {
-		return available;
+		return available && ScriptDeliveryNetwork.getInstance().isAvailable();
 	}
 
 	public boolean isReady() {
