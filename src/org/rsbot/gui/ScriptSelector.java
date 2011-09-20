@@ -407,7 +407,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		public void search(final String find, final String keys) {
 			matches.clear();
 			for (final ScriptDefinition def : scripts) {
-				if (ScriptUserList.getInstance().isSelected() && !ScriptUserList.getInstance().isListed(def)) {
+				if (ScriptUserList.getInstance().isAvailable() && ScriptUserList.getInstance().isSelected() && !ScriptUserList.getInstance().isListed(def)) {
 					continue;
 				}
 				if (find.length() != 0 && !def.name.toLowerCase().contains(find.toLowerCase())) {
