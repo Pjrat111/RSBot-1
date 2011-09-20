@@ -63,7 +63,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		init();
 		update();
 		load();
-		if (!connectPrompted && Preferences.getInstance().sdnUser.length() == 0) {
+		if (!connectPrompted && Preferences.getInstance().sdnUser.length() == 0 && ScriptUserList.getInstance().isAvailable()) {
 			log.info("Visit " + Configuration.Paths.URLs.HOST + "/scripts to create your custom script list!");
 			connect.doClick();
 		}
