@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TwitterUpdates implements Runnable {
-	@Override
 	public void run() {
 		final Logger log = Logger.getLogger("@" + Configuration.Twitter.NAME);
 		final Level level = Level.INFO;

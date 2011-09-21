@@ -1,6 +1,5 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.web.WebData;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.web.*;
 import org.rsbot.script.wrappers.RSTile;
@@ -179,7 +178,7 @@ public class Web extends MethodProvider {
 			if (walkRoute == null) {
 				return null;
 			}
-			walkRoute.add(new RouteStep(methods, transfer.getInteractionTile()));
+			walkRoute.add(new RouteStep(methods, transfer.walkTo()));
 			return walkRoute;
 		}
 		//TODO Special path generation (teleports, npcs, objects).
