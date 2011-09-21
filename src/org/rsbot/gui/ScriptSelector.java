@@ -42,7 +42,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private JComboBox categories;
 	private final ScriptTableModel model;
 	private final List<ScriptDefinition> scripts;
-	private JButton submit, connect;
+	private JButton submit, connect, local;
 	public static boolean connectPrompted = false;
 
 	static {
@@ -84,12 +84,13 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private void load() {
 		scripts.clear();
+		scripts.addAll(SRC_PRE_COMPILED.list());
+		scripts.addAll(SRC_SOURCES.list());
+		local.setEnabled(scripts.size() != 0);
 		final List<ScriptDefinition> net = SRC_NETWORK.list();
 		if (net != null) {
 			scripts.addAll(net);
 		}
-		scripts.addAll(SRC_PRE_COMPILED.list());
-		scripts.addAll(SRC_SOURCES.list());
 		Collections.sort(scripts);
 
 		filter();
@@ -112,6 +113,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DISCONNECT)));
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
+		refresh.setFocusable(false);
 		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				refresh.setEnabled(false);
@@ -313,7 +315,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		connectUpdate();
 		accounts = new JComboBox(AccountManager.getAccountNames());
-		categories = new JComboBox(new String[]{"All", "Local", "Agility", "Combat", "Construction", "Cooking", "Crafting", "Dungeoneering", "Farming",
+		categories = new JComboBox(new String[]{"All", "Agility", "Combat", "Construction", "Cooking", "Crafting", "Dungeoneering", "Farming",
 				"Firemaking", "Fishing", "Fletching", "Herblore", "Hunter", "Magic", "Minigame", "Mining", "Other", "Money Making", "Prayer",
 				"Ranged", "Runecrafting", "Slayer", "Smithing", "Summoning", "Thieving", "Woodcutting"});
 		accounts.setPreferredSize(new Dimension(125, 20));
@@ -323,13 +325,27 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				filter();
 			}
 		});
+		local = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT_EDIT)));
+		local.setToolTipText("Show local scripts");
+		local.setFocusable(false);
+		local.setSelected(Preferences.getInstance().localScripts);
+		local.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				Preferences.getInstance().localScripts = !Preferences.getInstance().localScripts;
+				local.setSelected(Preferences.getInstance().localScripts);
+				filter();
+			}
+		});
+		toolBar.add(refresh);
+		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(search);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(categories);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
 		toolBar.add(Box.createHorizontalStrut(5));
-		toolBar.add(refresh);
+		toolBar.add(local);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(connect);
 		toolBar.add(Box.createHorizontalStrut(5));
@@ -350,7 +366,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 
 	private void filter() {
 		final String keys = ((String) categories.getSelectedItem()).toLowerCase();
-		model.search((search == null || search.getForeground() == searchAltColor) ? "" : search.getText(), keys.equals("all") ? null : keys);
+		model.search((search == null || search.getForeground() == searchAltColor) ? "" : search.getText(), keys.equals("all") ? null : keys, Preferences.getInstance().localScripts);
 	}
 
 	private void setColumnWidths(final JTable table, final int... widths) {
@@ -411,11 +427,17 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			matches = new ArrayList<ScriptDefinition>();
 		}
 
-		public void search(final String find, final String keys) {
+		public void search(final String find, final String keys, final boolean local) {
 			matches.clear();
 			for (final ScriptDefinition def : scripts) {
-				if (ScriptUserList.getInstance().isAvailable() && ScriptUserList.getInstance().isSelected() && !ScriptUserList.getInstance().isListed(def)) {
+				final boolean isLocal = !(def.source instanceof ScriptDeliveryNetwork);
+				if (isLocal && !local) {
 					continue;
+				}
+				if (ScriptUserList.getInstance().isAvailable() && ScriptUserList.getInstance().isSelected() && !ScriptUserList.getInstance().isListed(def)) {
+					if (!(local && isLocal)) {
+						continue;
+					}
 				}
 				if (find.length() != 0 && !def.name.toLowerCase().contains(find.toLowerCase())) {
 					continue;
