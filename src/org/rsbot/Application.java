@@ -1,14 +1,14 @@
 package org.rsbot;
 
 import org.rsbot.bot.Bot;
-import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.Chrome;
 import org.rsbot.gui.LoadScreen;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Application {
-	private static BotGUI gui;
+	private static Chrome gui;
 
 	public static void main(final String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -19,7 +19,7 @@ public class Application {
 		if (LoadScreen.showDialog()) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					gui = new BotGUI();
+					gui = new Chrome();
 				}
 			});
 		}

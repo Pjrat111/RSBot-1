@@ -2,7 +2,7 @@ package org.rsbot.gui.component;
 
 import org.rsbot.bot.Bot;
 import org.rsbot.event.EventManager;
-import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.Chrome;
 import org.rsbot.script.methods.Mouse;
 
 import javax.swing.*;
@@ -60,9 +60,9 @@ public class BotPanel extends JPanel {
 	public BotPanel() {
 		updater = new HomeUpdater();
 		offset = new Point(0, 0);
-		setSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
-		setMinimumSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
-		setPreferredSize(new Dimension(BotGUI.PANEL_WIDTH, BotGUI.PANEL_HEIGHT));
+		setSize(new Dimension(Chrome.PANEL_WIDTH, Chrome.PANEL_HEIGHT));
+		setMinimumSize(new Dimension(Chrome.PANEL_WIDTH, Chrome.PANEL_HEIGHT));
+		setPreferredSize(new Dimension(Chrome.PANEL_WIDTH, Chrome.PANEL_HEIGHT));
 		setBackground(Color.BLACK);
 		addComponentListener(new ComponentAdapter() {
 			@Override

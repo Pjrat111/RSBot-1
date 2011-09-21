@@ -2,7 +2,7 @@ package org.rsbot.gui.component;
 
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.Paths.URLs;
-import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.Chrome;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IniParser;
 
@@ -139,7 +139,7 @@ public class SplashAd extends JDialog implements MouseListener, Runnable {
 	}
 
 	public void mouseReleased(final MouseEvent e) {
-		BotGUI.openURL(link);
+		Chrome.openURL(link);
 		dispose();
 	}
 

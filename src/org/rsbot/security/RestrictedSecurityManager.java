@@ -3,7 +3,7 @@ package org.rsbot.security;
 import org.rsbot.Application;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
-import org.rsbot.gui.BotGUI;
+import org.rsbot.gui.Chrome;
 import org.rsbot.gui.LoadScreen;
 import org.rsbot.script.AccountStore;
 import org.rsbot.script.Script;
@@ -87,7 +87,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExec(final String cmd) {
 		final String calling = getCallingClass();
-		for (final Class<?> c : new Class<?>[]{BotGUI.class, Configuration.class, JavaCompiler.class, LoadScreen.class}) {
+		for (final Class<?> c : new Class<?>[]{Chrome.class, Configuration.class, JavaCompiler.class, LoadScreen.class}) {
 			if (calling.startsWith(c.getName())) {
 				super.checkExec(cmd);
 				return;
@@ -99,7 +99,7 @@ public class RestrictedSecurityManager extends SecurityManager {
 	@Override
 	public void checkExit(final int status) {
 		final String calling = getCallingClass();
-		if (calling.equals(BotGUI.class.getName()) || calling.equals(Application.class.getName()) || calling.startsWith(LoadScreen.class.getName())) {
+		if (calling.equals(Chrome.class.getName()) || calling.equals(Application.class.getName()) || calling.startsWith(LoadScreen.class.getName())) {
 			super.checkExit(status);
 		} else {
 			throw new SecurityException();

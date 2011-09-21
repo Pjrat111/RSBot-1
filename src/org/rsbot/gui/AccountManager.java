@@ -422,7 +422,7 @@ public class AccountManager extends JDialog implements ActionListener {
 				!s[1].getClassName().equals(AccountManager.class.getName()) ||
 				!(s[2].getClassName().equals(AccountManager.class.getName())) ||
 				!(
-						s[3].getClassName().equals(BotGUI.class.getName()) ||
+						s[3].getClassName().equals(Chrome.class.getName()) ||
 								s[3].getClassName().equals(ScriptSelector.class.getName()) ||
 								s[3].getClassName().equals(AccountManager.class.getName()) ||
 								s[3].getClassName().equals(Bot.class.getName()) ||

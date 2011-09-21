@@ -33,7 +33,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private static final ScriptSource SRC_SOURCES;
 	private static final ScriptSource SRC_PRE_COMPILED;
 	private static final ScriptSource SRC_NETWORK;
-	private final BotGUI frame;
+	private final Chrome frame;
 	private final Bot bot;
 	private JTable table;
 	private JTextField search;
@@ -51,7 +51,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
 	}
 
-	public ScriptSelector(final BotGUI frame, final Bot bot) {
+	public ScriptSelector(final Chrome frame, final Bot bot) {
 		super(frame, "Scripts", true);
 		this.frame = frame;
 		this.bot = bot;
@@ -186,7 +186,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 				visit.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(final MouseEvent e) {
-						BotGUI.openURL(def.website);
+						Chrome.openURL(def.website);
 					}
 				});
 
