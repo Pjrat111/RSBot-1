@@ -44,7 +44,7 @@ public final class LoadScreen extends JDialog {
 	private static final long serialVersionUID = 5520543482560560389L;
 	private JProgressBar progress = null;
 	private LabelLogHandler handler = null;
-	public String error = null;
+	public boolean error = false;
 	private static LoadScreen instance = null;
 
 	private LoadScreen() {
@@ -58,27 +58,29 @@ public final class LoadScreen extends JDialog {
 
 		for (final Callable<Boolean> task : tasks) {
 			try {
-				task.call();
+				if (!task.call()) {
+					error = true;
+					break;
+				}
 			} catch (final Exception e) {
-				error = e instanceof ServiceException ? e.getMessage() : "Error: " + e.getMessage();
-				log.severe(error);
+				log.severe("Error: " + e.getMessage());
+				error = true;
 				break;
 			}
 		}
 
-		if (error == null) {
+		if (!error) {
 			log.info("Loading");
 			Configuration.registerLogging();
 			Logger.getLogger("").removeHandler(handler);
 		} else {
 			progress.setIndeterminate(false);
-			log.severe(error);
 		}
 	}
 
 	public static boolean showDialog() {
 		instance = new LoadScreen();
-		return instance.error == null;
+		return !instance.error;
 	}
 
 	public static void quit() {
@@ -200,18 +202,19 @@ public final class LoadScreen extends JDialog {
 					log.info("Downloading update v" + StringUtil.formatVersion(UpdateChecker.getLatestVersion()));
 					final String path = UpdateChecker.downloadLatest();
 					if (path == null || path.length() == 0 || !new File(path).isFile()) {
-						throw new ServiceException("Please update at " + Configuration.Paths.URLs.HOST);
+						log.severe("Please update at " + Configuration.Paths.URLs.HOST);
 					} else {
 						try {
 							Runtime.getRuntime().exec("java -jar \"" + path + "\"");
 							System.exit(0);
 						} catch (final IOException ignored) {
-							throw new ServiceException("Please run the latest version");
+							log.severe("Please run the latest version");
 						}
 					}
 				} else {
-					throw new ServiceException("Please update your Git/SVN working copy");
+					log.severe("Please update your Git/SVN working copy");
 				}
+				return false;
 			}
 			return true;
 		}
@@ -219,17 +222,20 @@ public final class LoadScreen extends JDialog {
 
 	private final class LoadClient implements Callable<Boolean> {
 		@Override
-		public Boolean call() throws ServiceException {
+		public Boolean call() {
+			boolean pass = true;
 			log.info("Starting game client");
 			try {
 				ClientLoader.getInstance().load();
 			} catch (final Exception e) {
-				throw new ServiceException("Client error: " + e.getMessage());
+				log.severe("Client error: " + e.getMessage());
+				pass = false;
 			}
 			if (ClientLoader.getInstance().isOutdated()) {
-				throw new ServiceException("Bot is outdated, please wait and try again later");
+				log.severe("Bot is outdated, please wait and try again later");
+				pass = false;
 			}
-			return true;
+			return pass;
 		}
 	}
 
