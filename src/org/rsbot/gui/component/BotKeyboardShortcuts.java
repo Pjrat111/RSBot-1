@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
+import javax.swing.JFrame;
+
 
 /**
  * @author Mothma
@@ -27,22 +29,24 @@ public class BotKeyboardShortcuts {
 		SHORTCUT_MAP.put(KeyEvent.VK_O, Messages.TOOLS + "." + Messages.OPTIONS);
 	}
 
-	public BotKeyboardShortcuts(final KeyboardFocusManager manager, final ActionListener listener) {
-		manager.addKeyEventDispatcher(new KeyDispatcher(manager, listener));
+	public BotKeyboardShortcuts(final KeyboardFocusManager manager, final ActionListener listener, final JFrame parent) {
+		manager.addKeyEventDispatcher(new KeyDispatcher(manager, listener, parent));
 	}
 
 	private class KeyDispatcher implements KeyEventDispatcher {
 		final KeyboardFocusManager manager;
 		final ActionListener listener;
+		private final JFrame parent;
 
-		public KeyDispatcher(final KeyboardFocusManager manager, final ActionListener listener) {
+		public KeyDispatcher(final KeyboardFocusManager manager, final ActionListener listener, final JFrame parent) {
 			this.manager = manager;
 			this.listener = listener;
+			this.parent = parent;
 		}
 
 		@Override
 		public boolean dispatchKeyEvent(final KeyEvent e) {
-			if (e.isControlDown()) {
+			if (e.isControlDown() && parent.isFocused()) {
 				if (SHORTCUT_MAP.containsKey(e.getKeyCode())) {
 					if (e.getID() == KeyEvent.KEY_PRESSED) {
 						listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, SHORTCUT_MAP.get(e.getKeyCode())));
