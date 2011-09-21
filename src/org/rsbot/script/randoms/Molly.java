@@ -33,9 +33,7 @@ public class Molly extends Random {
 
 	private static RSNPC molly;
 	private static RSObject controlPanel;
-	private static RSTile cpTile = new RSTile(10893, 2575);
 	private static int mollyID = -1;
-	private static boolean cameraSet;
 	private static boolean talkedToMolly;
 	private static boolean finished;
 	private static long delayTime;
@@ -43,7 +41,6 @@ public class Molly extends Random {
 	@Override
 	public void onFinish() {
 		mollyID = -1;
-		cameraSet = false;
 		talkedToMolly = false;
 		finished = false;
 		delayTime = -1;
@@ -53,19 +50,7 @@ public class Molly extends Random {
 	public boolean activateCondition() {
 		molly = npcs.getNearest("Molly");
 		controlPanel = objects.getNearest(Molly.CONTROL_PANEL_ID);
-		return molly != null && molly.isInteractingWithLocalPlayer()
-				|| controlPanel != null;
-	}
-
-	private boolean inControlInterface() {
-		final RSInterface i = interfaces.get(Molly.CONTROL_INTERFACEGROUP);
-		return i != null && i.isValid();
-	}
-
-	private boolean inControlRoom() {
-		final RSObject o = objects.getNearest(DOOR_ID);
-		return o != null
-				&& getMyPlayer().getLocation().getX() > o.getLocation().getX();
+		return molly != null && molly.isInteractingWithLocalPlayer() || controlPanel != null;
 	}
 
 	@Override
@@ -81,70 +66,61 @@ public class Molly extends Random {
 		if (getMyPlayer().isMoving() || getMyPlayer().getAnimation() != -1) {
 			return random(800, 1300);
 		}
-		if (interfaces.canContinue()) {
-			interfaces.clickContinue();
-			return random(250, 750);
+		if (interfaces.clickContinue()) {
+			setCamera();
+			return random(500, 800);
 		}
 		if (mollyID == -1) {
 			mollyID = molly.getID();
 			log("Molly ID: " + Integer.toString(mollyID));
 			log("Evil Twin ID:" + Integer.toString(mollyID - 40));
 		}
-		if (interfaces.canContinue()) {
-			setCamera();
-			interfaces.clickContinue();
-			return random(500, 800);
-		}
 		final RSComponent skipInterface = interfaces.get(
-				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(
-				Molly.MOLLY_CHATBOX_SKIP);
+				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(Molly.MOLLY_CHATBOX_SKIP);
 		if (skipInterface != null && skipInterface.isValid()
-				&& skipInterface.getAbsoluteY() > 5
-				&& skipInterface.containsText("Yes, I")) {
+				&& skipInterface.getAbsoluteY() > 5 && skipInterface.containsText("Yes, I")) {
 			skipInterface.doClick();
 			return random(600, 1000);
 		}
 		final RSComponent noThanksInterface = interfaces.get(
-				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(
-				Molly.MOLLY_CHATBOX_NOTHANKS);
+				Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(Molly.MOLLY_CHATBOX_NOTHANKS);
 		if (noThanksInterface != null && noThanksInterface.isValid()
 				&& noThanksInterface.getAbsoluteY() > 5) {
 			setCamera();
 			sleep(random(800, 1200));
-			noThanksInterface.doClick();
-			talkedToMolly = true;
+			if (noThanksInterface.doClick()) {
+				talkedToMolly = true;
+			}
 			return random(600, 1000);
 		}
-		if (!cameraSet) {
+		if (camera.getPitch() < 95 && !inControlInterface()) {
 			camera.setPitch(true);
-			cameraSet = true;
 			return random(300, 500);
 		}
-		if (finished && !inControlRoom()) {
-			if (!calc.tileOnScreen(molly.getLocation())) {
-				walking.walkTileOnScreen(molly.getLocation());
-				return random(1000, 2000);
+		if (finished) {
+			if (!inControlRoom()) {
+				if (!calc.tileOnScreen(molly.getLocation())) {
+					walking.walkTileOnScreen(molly.getLocation());
+					return random(1000, 2000);
+				}
+				molly.interact("Talk");
+				return random(1000, 1200);
+			} else {
+				if (openDoor()) {
+					return random(2000, 2500);
+				}
+				return random(400, 600);
 			}
-			molly.interact("Talk");
-			return random(1000, 1200);
-		}
-		if (finished && inControlRoom()) {
-			if (!openDoor()) {
-				return random(1000, 1500);
-			}
-			return random(400, 600);
 		}
 		if (!inControlRoom()) {
-			if (talkedToMolly
-					&& !finished
+			if (talkedToMolly && !finished
 					&& (interfaces.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP) == null || interfaces
-					.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP)
-					.getComponent(0).getAbsoluteY() < 2)
+					.get(Molly.MOLLY_CHATBOX_INTERFACEGROUP).getComponent(0).getAbsoluteY() < 2)
 					&& (interfaces.get(Molly.MOLLY_CHATBOX_NOTHANKS) == null || interfaces
-					.get(Molly.MOLLY_CHATBOX_NOTHANKS).getComponent(0)
-					.getAbsoluteY() < 2)) {
-				openDoor();
-				sleep(random(800, 1200));
+					.get(Molly.MOLLY_CHATBOX_NOTHANKS).getComponent(0).getAbsoluteY() < 2)) {
+				if (openDoor()) {
+					sleep(random(800, 1200));
+				}
 			} else {
 				molly.interact("Talk");
 				talkedToMolly = true;
@@ -156,24 +132,25 @@ public class Molly extends Random {
 				sleep(random(800, 1200));
 			} else {
 				if (!inControlInterface()) {
-					if (calc.tileOnScreen(cpTile)) {
-						if (controlPanel != null) {
-							controlPanel.interact("Use");
-							sleep(1200, 2000);
+					if (controlPanel != null) {
+						if (controlPanel.isOnScreen()) {
+							if (controlPanel.interact("Use")) {
+								sleep(random(1200, 2000));
+							}
+						} else {
+							camera.setPitch(true);
+							camera.turnTo(controlPanel.getLocation());
+							walking.walkTileOnScreen(controlPanel.getLocation());
 						}
 					} else {
-						walking.walkTileOnScreen(cpTile);
-						camera.setPitch(true);
-						camera.turnTo(cpTile);
+						camera.setPitch(false);
+						camera.setCompass('e');
 					}
 				} else {
 					navigateClaw();
 					delayTime = System.currentTimeMillis();
-					while (!interfaces.canContinue()
-							&& System.currentTimeMillis() - delayTime < 15000) {
-					}
-					if (interfaces.canContinue()) {
-						interfaces.clickContinue();
+					while (!interfaces.canContinue() && System.currentTimeMillis() - delayTime < 12000) {
+						// Waiting for the cut scene to finish
 					}
 					sleep(random(300, 400));
 				}
@@ -188,8 +165,7 @@ public class Molly extends Random {
 		}
 		RSObject claw;
 		RSNPC suspect;
-		while ((claw = objects.getNearest(Molly.CLAW_ID)) != null
-				&& (suspect = npcs.getNearest(mollyID - 40)) != null) {
+		while ((claw = objects.getNearest(Molly.CLAW_ID)) != null && (suspect = npcs.getNearest(mollyID - 40)) != null) {
 			final RSTile clawLoc = claw.getLocation();
 			final RSTile susLoc = suspect.getLocation();
 			final ArrayList<Integer> options = new ArrayList<Integer>();
@@ -210,12 +186,10 @@ public class Molly extends Random {
 			}
 			final RSInterface i = interfaces.get(Molly.CONTROL_INTERFACEGROUP);
 			if (i != null && i.isValid()) {
-				i.getComponent(options.get(random(0, options.size())))
-						.doClick();
+				i.getComponent(options.get(random(0, options.size()))).doClick();
 			}
 			delayTime = System.currentTimeMillis();
-			while (!hasClawMoved(clawLoc)
-					&& System.currentTimeMillis() - delayTime < 3500) {
+			while (!hasClawMoved(clawLoc) && System.currentTimeMillis() - delayTime < 3500) {
 				sleep(10);
 			}
 		}
@@ -227,28 +201,37 @@ public class Molly extends Random {
 			return false;
 		}
 		final RSTile currentClawLoc = claw.getLocation();
-		return currentClawLoc.getX() - prevClawLoc.getX() != 0
-				|| currentClawLoc.getY() - prevClawLoc.getY() != 0;
+		return !prevClawLoc.equals(currentClawLoc);
 	}
 
 	private boolean openDoor() {
 		final RSObject door = objects.getNearest(Molly.DOOR_ID);
-		if (door == null) {
-			return false;
+		if (door != null) {
+			if (!calc.tileOnScreen(door.getLocation())) {
+				walking.walkTileOnScreen(door.getLocation());
+				sleep(random(1000, 2000));
+				return false;
+			}
+			if (door.interact("Open")) {
+				return true;
+			}
 		}
-		if (!calc.tileOnScreen(door.getLocation())) {
-			walking.walkTileOnScreen(door.getLocation());
-			sleep(1000, 2000);
-			return false;
-		}
-		door.interact("Open");
 		return false;
 	}
 
+	private boolean inControlRoom() {
+		final RSObject o = objects.getNearest(DOOR_ID);
+		return o != null && getMyPlayer().getLocation().getX() > o.getLocation().getX();
+	}
+
+	private boolean inControlInterface() {
+		final RSInterface i = interfaces.get(Molly.CONTROL_INTERFACEGROUP);
+		return i != null && i.isValid();
+	}
+
 	private void setCamera() {
-		if (random(0, 6) == 3 && !cameraSet) {
+		if (random(0, 6) == 3) {
 			camera.setPitch(true);
-			cameraSet = true;
 		}
 	}
 }
