@@ -30,7 +30,6 @@ import org.rsbot.log.LogOutputStream;
 import org.rsbot.log.SystemConsoleHandler;
 import org.rsbot.security.RestrictedSecurityManager;
 import org.rsbot.service.Preferences;
-import org.rsbot.util.ServiceException;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.HttpClient;
@@ -195,7 +194,7 @@ public final class LoadScreen extends JDialog {
 
 	private final class LoadUpdates implements Callable<Boolean> {
 		@Override
-		public Boolean call() throws ServiceException {
+		public Boolean call() {
 			log.info("Checking for updates");
 			if (UpdateChecker.getLatestVersion() > Configuration.getVersion()) {
 				if (Configuration.RUNNING_FROM_JAR) {
