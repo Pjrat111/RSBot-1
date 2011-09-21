@@ -1,4 +1,4 @@
-package org.rsbot.script.background;
+package org.rsbot.script.web;
 
 import org.rsbot.script.Script;
 import org.rsbot.script.ScriptManifest;

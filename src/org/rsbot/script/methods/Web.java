@@ -1,6 +1,6 @@
 package org.rsbot.script.methods;
 
-import org.rsbot.script.background.WebData;
+import org.rsbot.script.web.WebData;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.web.*;
 import org.rsbot.script.wrappers.RSTile;
