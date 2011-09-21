@@ -373,6 +373,15 @@ public class Game extends MethodProvider {
 		final RSInterface logout = methods.interfaces.get(INTERFACE_LOGOUT);
 		return logout != null && logout.isValid() ? Tab.LOGOUT : Tab.NONE;
 	}
+	
+	/**
+	 * Determines if runescape is loading
+	 * 
+	 * @return <tt>true</tt> if runescape is loading; otherwise <tt>false</tt>.
+	 */
+	public boolean isLoading() {
+		return getClientState() == INDEX_LOGGED_IN[1];
+	}
 
 	/**
 	 * Determines if quick chat is open
