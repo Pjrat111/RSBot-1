@@ -111,6 +111,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DISCONNECT)));
+		connect.setFocusable(false);
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.setFocusable(false);
@@ -315,6 +316,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		connectUpdate();
 		accounts = new JComboBox(AccountManager.getAccountNames());
+		accounts.setFocusable(accounts.getItemCount() > 1);
 		categories = new JComboBox(new String[]{"All", "Agility", "Combat", "Construction", "Cooking", "Crafting", "Dungeoneering", "Farming",
 				"Firemaking", "Fishing", "Fletching", "Herblore", "Hunter", "Magic", "Minigame", "Mining", "Other", "Money Making", "Prayer",
 				"Ranged", "Runecrafting", "Slayer", "Smithing", "Summoning", "Thieving", "Woodcutting"});
