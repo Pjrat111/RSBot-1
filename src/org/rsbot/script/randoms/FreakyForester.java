@@ -24,7 +24,6 @@ public class FreakyForester extends Random implements MessageListener {
 	private static short[] phe = {};
 	private static final Filter<RSNPC> pheasantFilter = new Filter<RSNPC>() {
 		public boolean accept(final RSNPC npc) {
-			// log("phe.length = " + phe.length);
 			final Filter<RSModel> modelFilter = RSModel.newVertexFilter(phe);
 			return modelFilter.accept(npc.getModel());
 		}
@@ -149,19 +148,9 @@ public class FreakyForester extends Random implements MessageListener {
 
 	@Override
 	public boolean activateCondition() {
-		if (!game.isLoggedIn()) {
-			return false;
-		}
-
-		forester = npcs.getNearest(FORESTER_ID);
-		if (forester != null) {
-			sleep(random(2000, 3000));
-			if (npcs.getNearest(FORESTER_ID) != null) {
-				final RSObject portal = objects.getNearest(PORTAL_ID);
-				return portal != null;
-			}
-		}
-		return false;
+		final RSNPC forester = npcs.getNearest(FORESTER_ID);
+		final RSObject portal = objects.getNearest(PORTAL_ID);
+		return game.isLoggedIn() && forester != null && portal != null;
 	}
 
 	int getState() {
@@ -187,9 +176,9 @@ public class FreakyForester extends Random implements MessageListener {
 			return -1;
 		}
 		if (getMyPlayer().getAnimation() != -1) {
-			return random(3000, 5000);
+			return random(2000, 3000);
 		} else if (getMyPlayer().isMoving()) {
-			return random(200, 500);
+			return random(750, 900);
 		}
 		if (!done) {
 			done = searchText(241, "Thank you") || interfaces.getComponent(242, 4).containsText("leave");
@@ -205,24 +194,26 @@ public class FreakyForester extends Random implements MessageListener {
 			if (game.getTab() != Game.Tab.EQUIPMENT) {
 				game.openTab(Game.Tab.EQUIPMENT);
 				sleep(random(1000, 1500));
-				interfaces.get(Equipment.INTERFACE_EQUIPMENT).getComponent(17).doClick();
+				interfaces.getComponent(Equipment.INTERFACE_EQUIPMENT, 17).doClick();
 				unequip = false;
 				return random(1000, 1500);
 			}
 			return random(100, 500);
 		}
-		if (bank.isDepositOpen() || inventory.getCount(false) == 28 && !inventory.containsAll(6178)) {
+		if (bank.isDepositOpen() || inventory.getCountExcept(6178, 6179) == 28) {
 			final int r = random(21, 27);
-			if (bank.isDepositOpen() && bank.getBoxCount() == 28) {
-				if (interfaces.get(11).getComponent(17).getComponent(r).getComponentStackSize() > 1) {
-					interfaces.get(11).getComponent(17).getComponent(r).interact("Deposit-All");
+			if (bank.isDepositOpen()) {
+				if (bank.getBoxCount() == 28) {
+					if (interfaces.getComponent(11, 17).getComponent(r).getComponentStackSize() > 1) {
+						interfaces.getComponent(11, 17).getComponent(r).interact("Deposit-All");
+					} else {
+						interfaces.getComponent(11, 17).getComponent(r).interact("Deposit");
+					}
+					return random(1000, 1500);
 				} else {
-					interfaces.get(11).getComponent(17).getComponent(r).interact("Deposit");
+					bank.close();
+					return random(1000, 1500);
 				}
-				return random(1000, 1500);
-			} else if (bank.isDepositOpen()) {
-				bank.close();
-				return random(1000, 1500);
 			}
 			final RSObject box = objects.getNearest(32931);
 			if (!calc.tileOnScreen(box.getLocation()) && calc.distanceTo(walking.getDestination()) < 8
@@ -261,16 +252,13 @@ public class FreakyForester extends Random implements MessageListener {
 					return random(200, 500);
 				}
 				final RSNPC pheasant = npcs.getNearest(pheasantFilter);
-				final RSGroundItem tile = groundItems.getNearest(6178);
-				if (tile != null) {
-					tiles.interact(tile.getLocation(), "Take");
-					return random(600, 900);
-				} else if (pheasant != null) {
+				if (pheasant != null) {
 					// log("Pheasant ID = " + pheasant.getID());
 					if (calc.tileOnScreen(pheasant.getLocation())
 							&& calc.distanceTo(pheasant.getLocation()) <= 5) {
-						pheasant.interact("Attack");
-						return random(1000, 1500);
+						if (pheasant.interact("Attack")) {
+							return random(1000, 1500);
+						}
 					} else if (calc.distanceTo(pheasant.getLocation()) >= 5) {
 						walking.walkTileMM(walking.getClosestTileOnMap(pheasant.getLocation().randomize(3, 3)));
 						camera.turnTo(pheasant.getLocation().randomize(3, 3));
