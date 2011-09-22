@@ -421,7 +421,7 @@ public class Bank extends MethodProvider {
 				if (bankBooth != null) {
 					didAction = bankBooth.interact("Use-quickly");
 				} else if (banker != null) {
-					didAction = banker.interact("Bank", "Banker") || banker.interact("Bank", "Fremennik banker") ||
+					didAction = banker.interact("Bank Banker") || banker.interact("Bank", "Banker") || banker.interact("Bank", "Fremennik banker") ||
 							banker.interact("Bank", "Emerald Benedict") || banker.interact("Bank", "'Bird's-Eye' Jack") ||
 							banker.interact("Bank", "Fadli");
 				} else if (bankChest != null) {
