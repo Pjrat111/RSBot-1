@@ -18,6 +18,7 @@ import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.ScreenshotUtil;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.*;
@@ -171,6 +172,9 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 						current.disableRandoms = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					} else if (option.equals(Messages.DISABLEAUTOLOGIN)) {
 						current.disableAutoLogin = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
+					} else if (option.equals(Messages.DISABLETHEME)) {
+						Preferences.getInstance().theme = !((JCheckBoxMenuItem) evt.getSource()).isSelected();
+						log.info("Themes will be " + (Preferences.getInstance().theme ? "enabled" : "disabled") + " next time you run the application");
 					}
 				}
 			}

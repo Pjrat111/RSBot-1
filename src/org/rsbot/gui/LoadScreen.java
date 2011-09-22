@@ -241,7 +241,7 @@ public final class LoadScreen extends JDialog {
 	private final class LoadSkin implements Callable<Boolean> {
 		@Override
 		public Boolean call() {
-			if (Configuration.isSkinAvailable()) {
+			if (Configuration.isSkinAvailable() && Preferences.getInstance().theme) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						try {

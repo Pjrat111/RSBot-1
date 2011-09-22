@@ -5,6 +5,7 @@ import org.rsbot.bot.Bot;
 import org.rsbot.event.impl.*;
 import org.rsbot.event.listeners.PaintListener;
 import org.rsbot.event.listeners.TextPaintListener;
+import org.rsbot.service.Preferences;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,9 @@ public class BotMenuBar extends JMenuBar {
 						(EXTENDED_VIEW_INITIAL ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.EXTDVIEWS,
 						Messages.MENUSEPERATOR,
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
-						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN},
+						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
+						Messages.MENUSEPERATOR,
+						Messages.TOGGLEFALSE + Messages.DISABLETHEME},
 				constructDebugs(), {Messages.LICENSES}, {Messages.SITE, Messages.PROJECT, Messages.LICENSE, Messages.ABOUT}};
 	}
 
@@ -147,6 +150,8 @@ public class BotMenuBar extends JMenuBar {
 		}
 		constructItemIcons();
 		commandMenuItem.get(Messages.HIDE).setVisible(SystemTray.isSupported());
+		commandCheckMap.get(Messages.DISABLETHEME).setSelected(!Preferences.getInstance().theme);
+		commandCheckMap.get(Messages.DISABLETHEME).setEnabled(Configuration.isSkinAvailable());
 		setExtendedView(EXTENDED_VIEW_INITIAL);
 	}
 

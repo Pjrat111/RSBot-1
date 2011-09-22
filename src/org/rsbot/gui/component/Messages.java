@@ -27,6 +27,7 @@ public class Messages {
 	public static final String DISABLEADS = "Disable advertisments";
 	public static final String LESSCPU = "Less CPU";
 	public static final String DISABLECANVAS = "Disable Canvas";
+	public static final String DISABLETHEME = "Disable Theme";
 	public static final String EXTDVIEWS = "Extended Views";
 	public static final String AUTOSHUTDOWN = "Shutdown (mins):";
 
