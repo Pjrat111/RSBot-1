@@ -7,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Obtains information on tradeable items from the Grand Exchange website and
@@ -37,8 +35,6 @@ public class GrandExchange extends MethodProvider {
 
 	public static final int[] GRAND_EXCHANGE_CLERK = {6528, 6529,
 			1419, 2240, 2241, 2593};
-
-	private static final Pattern PATTERN = Pattern.compile("(?i)<td><img src=\".+obj_sprite\\.gif\\?id=(\\d+)\" alt=\"(.+)\"");
 
 	GrandExchange(final MethodContext ctx) {
 		super(ctx);
@@ -1146,7 +1142,6 @@ public class GrandExchange extends MethodProvider {
 				}
 			}
 		} catch (final IOException ignored) {
-			log.severe("Item not found!");
 		}
 		return null;
 	}
