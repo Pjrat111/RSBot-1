@@ -38,7 +38,7 @@ public class Pillory extends Random {
 			return false;
 		}
 		for (final RSTile cageTile : cageTiles) {
-			if (getMyPlayer().getLocation().equals(cageTile)) {
+			if (getMyPlayer().getLocation().equals(cageTile) && game.getClientState() != 12) {
 				return true;
 			}
 		}
@@ -51,17 +51,17 @@ public class Pillory extends Random {
 
 	private int getKey() {
 		int key = 0;
-		log.info("\tKey needed :");
 		final int lockModelID = interfaces.getComponent(GameInterface, 4).getModelID();
 		for (int i = 0; i < MODEL_IDS.length; i++) {
 			if (MODEL_IDS[i] == lockModelID) {
 				key = MODEL_IDS[i] - 4;
-				log.info("\t\t" + MODEL_NAMES[i]);
+				log.info("Key needed: " + MODEL_NAMES[i]);
 				break;
 			}
 		}
 		for (int i = 5; i < 8; i++) {
 			if (interfaces.getComponent(GameInterface, i).getModelID() == key) {
+				log("It is the " + (i - 4) + " key");
 				return i;
 			}
 		}
@@ -70,6 +70,9 @@ public class Pillory extends Random {
 
 	@Override
 	public int loop() {
+		if (!activateCondition()) {
+			return -1;
+		}
 		if (fail > 20) {
 			stopScript(false);
 		}
@@ -77,15 +80,10 @@ public class Pillory extends Random {
 			myLoc = getMyPlayer().getLocation();
 			return random(1000, 2000);
 		}
-		if (!getMyPlayer().getLocation().equals(myLoc)) {
-			log.info("Solved It.");
-			return -1;
-		}
 		if (!interfaces.get(GameInterface).isValid() && getMyPlayer().getAnimation() == -1) {
 			if (objects.getNearest("Cage") != null) {
 				if (objects.getNearest("Cage").interact("unlock")) {
-					log.info("Successfully opened the lock!");
-					return random(1000, 2000);
+					return random(1000, 1500);
 				} else {
 					fail++;
 				}
@@ -93,10 +91,8 @@ public class Pillory extends Random {
 		}
 		if (interfaces.get(GameInterface).isValid()) {
 			int key = getKey();
-			log.info("" + key);
 			if (key <= 7) {
 				if (interfaces.getComponent(GameInterface, (key + 3)).interact("Select")) {
-					key = -1;
 					return random(1300, 2500);
 				}
 				return 200;

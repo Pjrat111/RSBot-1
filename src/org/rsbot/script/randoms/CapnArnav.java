@@ -36,16 +36,8 @@ public class CapnArnav extends Random {
 	@Override
 	public boolean activateCondition() {
 		final RSNPC captain = npcs.getNearest(ARNAV_ID);
-
-		if (captain != null) {
-			sleep(random(1500, 1600));
-			final RSObject portal = objects.getNearest(EXIT_PORTAL);
-
-			return portal != null;
-
-		}
-
-		return false;
+		final RSObject portal = objects.getNearest(EXIT_PORTAL);
+		return portal != null && captain != null;
 	}
 
 	@Override
@@ -73,15 +65,12 @@ public class CapnArnav extends Random {
 		if (bank.isDepositOpen() || bank.isOpen()) {
 			bank.close();
 		}
-
 		if (!activateCondition()) {
 			return -1;
 		}
-
 		if (getMyPlayer().isMoving()) {
 			return random(1000, 2000);
 		}
-
 		switch (getState()) {
 			case EXIT:
 				final RSObject portal = objects.getNearest(EXIT_PORTAL);
@@ -118,7 +107,6 @@ public class CapnArnav extends Random {
 			case SOLVE:
 				final RSInterface solver = interfaces.get(CHEST_INTERFACE_PARENT);
 				if (solver != null && solver.isValid()) {
-
 					final String s = solver.getComponent(32).getText();
 					if (s.contains("Bowl")) {
 						index = 0;
@@ -129,14 +117,11 @@ public class CapnArnav extends Random {
 					} else if (s.contains("Bar")) {
 						index = 3;
 					}
-
 					if (solved()) {
 						solver.getComponent(CHEST_INTERFACE_UNLOCK).doClick();
 						return random(600, 900);
 					}
-
-					final RSComponent container = solver
-							.getComponent(CHEST_INTERFACE_CENTER);
+					final RSComponent container = solver.getComponent(CHEST_INTERFACE_CENTER);
 					for (int i = 0; i < 3; i++) {
 						int rand = random(0, 100);
 						if (rand < 50) {
@@ -144,14 +129,10 @@ public class CapnArnav extends Random {
 						} else if (rand >= 50) {
 							rand = 1;
 						}
-						final RSComponent target = solver
-								.getComponent(INTERFACE_SOLVE_IDS[index][i]);
+						final RSComponent target = solver.getComponent(INTERFACE_SOLVE_IDS[index][i]);
 						final RSComponent arrow = solver.getComponent(ARROWS[i][rand]);
-						while (container.isValid()
-								&& target.isValid()
-								&& !container.getArea().contains(
-								new Point(target.getCenter().x + 15, target
-										.getCenter().y)) && arrow.isValid()
+						while (container.isValid() && target.isValid() && !container.getArea().contains(
+								new Point(target.getCenter().x + 15, target.getCenter().y)) && arrow.isValid()
 								&& new Timer(10000).isRunning()) {
 							arrow.doClick();
 							sleep(random(1000, 1200));
@@ -170,19 +151,11 @@ public class CapnArnav extends Random {
 		final RSInterface solver = interfaces.get(CHEST_INTERFACE_PARENT);
 		if (solver != null && solver.isValid()) {
 			final RSComponent container = solver.getComponent(CHEST_INTERFACE_CENTER);
-
-			final Point p1 = solver.getComponent(INTERFACE_SOLVE_IDS[index][0])
-					.getCenter();
-			p1.setLocation(p1.x + 15, p1.y);
-			final Point p2 = solver.getComponent(INTERFACE_SOLVE_IDS[index][1])
-					.getCenter();
-			p2.setLocation(p2.x + 15, p1.y);
-			final Point p3 = solver.getComponent(INTERFACE_SOLVE_IDS[index][2])
-					.getCenter();
-			p3.setLocation(p3.x + 15, p1.y);
+			final Point p1 = solver.getComponent(INTERFACE_SOLVE_IDS[index][0]).getCenter();
+			final Point p2 = solver.getComponent(INTERFACE_SOLVE_IDS[index][1]).getCenter();
+			final Point p3 = solver.getComponent(INTERFACE_SOLVE_IDS[index][2]).getCenter();
 			return container.getArea().contains(p1)
-					&& container.getArea().contains(p2) && container.getArea()
-					.contains(p3);
+					&& container.getArea().contains(p2) && container.getArea().contains(p3);
 		}
 		return false;
 	}

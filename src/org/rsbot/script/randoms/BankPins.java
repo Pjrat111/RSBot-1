@@ -8,7 +8,7 @@ public class BankPins extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return interfaces.get(13).isValid() || interfaces.get(14).isValid();
+		return interfaces.get(13).isValid() || (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, I really want a Bank PIN"));
 	}
 
 	void enterPin(String pin) {
@@ -19,24 +19,20 @@ public class BankPins extends Random {
 		}
 		String pinNumber = String.valueOf(pin.charAt(state));
 		if (interfaces.getComponent(13, pinComponents[Integer.valueOf(pinNumber)]).doClick()) {
-			sleep(800, 1200);
+			sleep(800, 1600);
 		}
 	}
 
 	@Override
 	public int loop() {
-		if (interfaces.get(14).isValid()) {
-			interfaces.getComponent(14, 33).doClick();
+		if (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, I really want a Bank PIN")) {
+			interfaces.getComponent(14, 34).doClick();
 			return 500;
 		} else {
 			final String pin = account.getPin();
 			if (pin == null || pin.length() != 4) {
 				log.severe("You must add a bank pin to your account.");
 				stopScript(false);
-			}
-			if (interfaces.get(14).isValid() || !interfaces.get(13).isValid()) {
-				interfaces.get(14).getComponent(3).doClick();
-				return -1;
 			}
 			enterPin(pin);
 			if (interfaces.get(211).isValid()) {
@@ -45,6 +41,6 @@ public class BankPins extends Random {
 				sleep(random(10500, 12000));
 			}
 		}
-		return 500;
+		return activateCondition() ? 500 : -1;
 	}
 }
