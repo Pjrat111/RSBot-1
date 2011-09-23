@@ -3,7 +3,6 @@ package org.rsbot.script.randoms;
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
 import org.rsbot.script.wrappers.RSObject;
-import org.rsbot.script.wrappers.RSTile;
 
 /**
  * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
@@ -25,9 +24,7 @@ public class LostAndFound extends Random {
 			235718, 204007, 100418, 133186, 99361, 136357, 1057, 232547};
 	private final static int[] answerW = {105571, 37921, 131204, 235751, 1024, 165029, 168101, 68674, 203974, 2048, 100451, 6144,
 			39969, 69698, 32801, 136324};
-	private final static int[][] allAnswers = {
-			answerN, answerE, answerS, answerW
-	};
+	private final static int[][] allAnswers = {answerN, answerE, answerS, answerW};
 
 	@Override
 	public boolean activateCondition() {
@@ -51,9 +48,6 @@ public class LostAndFound extends Random {
 
 	@Override
 	public int loop() {
-		if (interfaces.canContinue()) {
-			interfaces.clickContinue();
-		}
 		if (getMyPlayer().isMoving()) {
 			return random(200, 300);
 		}
@@ -62,16 +56,14 @@ public class LostAndFound extends Random {
 		}
 		if (objects.getNearest(appendN) != null) {
 			final int appendage = getOddAppendage();
-
 			try {
 				final RSObject obj = objects.getNearest(appendage);
-				final RSTile tile = obj.getLocation();
-				if (!calc.tileOnScreen(tile)) {
-					walking.getPath(tile).traverse();
-					sleep(700, 900);
-				}
-				if (obj.interact("Operate")) {
-					sleep(1000, 1500);
+				if (!obj.isOnScreen()) {
+					walking.walkTileMM(obj.getLocation());
+				} else {
+					if (obj.interact("Operate")) {
+						sleep(1000, 1500);
+					}
 				}
 			} catch (final Exception ignored) {
 			}
