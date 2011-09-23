@@ -41,6 +41,9 @@ public class FrogCave extends Random {
 
 	@Override
 	public int loop() {
+		if (!activateCondition()) {
+			return -1;
+		}
 		try {
 			if (canContinue()) {
 				if (!talkedToHerald) {
