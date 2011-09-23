@@ -148,12 +148,12 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 	public boolean interact(final String action, final String option) {
 		try {
 			for (int i = 0; i < 10; i++) {
-				methods.mouse.move(getPoint());
 				if (contains(methods.mouse.getLocation())) {
 					if (methods.menu.doAction(action, option)) {
 						return true;
 					}
 				}
+				methods.mouse.move(getPoint());
 			}
 		} catch (final Exception ignored) {
 		}
