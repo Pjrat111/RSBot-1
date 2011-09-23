@@ -1,6 +1,7 @@
 package org.rsbot.bot;
 
 import org.rsbot.Configuration;
+import org.rsbot.gui.Chrome;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
+
 
 public class BotStub implements AppletStub, AppletContext {
 	private final Map<URL, WeakReference<Image>> IMAGE_CACHE = new HashMap<URL, WeakReference<Image>>();
@@ -131,6 +133,8 @@ public class BotStub implements AppletStub, AppletContext {
 			if (versionFile.exists() && !versionFile.delete()) {
 				log.warning("Unable to clear cache.");
 			}
+		} else if(url.toString().startsWith("https://secure.runescape.com")){
+			Chrome.openURL(url.toString());
 		} else if (!target.equals("tbi")) {
 			log.info("Attempting to show: " + url.toString() + " [" + target + "]");
 		}
