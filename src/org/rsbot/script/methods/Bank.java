@@ -385,68 +385,90 @@ public class Bank extends MethodProvider {
 	 *
 	 * @return <tt>true</tt> if the bank was opened; otherwise <tt>false</tt>.
 	 */
-	public boolean open() {
-		if (isOpen()) {
-			return true;
-		}
-		try {
-			if (methods.menu.isOpen()) {
-				methods.mouse.moveSlightly();
-				sleep(random(20, 30));
-			}
-			RSObject bankBooth = methods.objects.getNearest(BANK_BOOTHS);
-			RSObject bankChest = methods.objects.getNearest(BANK_CHESTS);
-			RSNPC banker = methods.npcs.getNearest(BANKERS);
-			/* Find closest one, others are set to null. Remember distance and tile. */
-			int lowestDist = Integer.MAX_VALUE;
-			RSTile tile = null;
-			if (bankBooth != null) {
-				tile = bankBooth.getLocation();
-				lowestDist = methods.calc.distanceTo(tile);
-			}
-			if (banker != null && methods.calc.distanceTo(banker) < lowestDist) {
-				tile = banker.getLocation();
-				lowestDist = methods.calc.distanceTo(tile);
-				bankBooth = null;
-			}
-			if (bankChest != null && methods.calc.distanceTo(bankChest) < lowestDist) {
-				tile = bankChest.getLocation();
-				lowestDist = methods.calc.distanceTo(tile);
-				bankBooth = null;
-				banker = null;
-			}
-			/* Open closest one, if any found */
-			if (lowestDist < 5 && methods.calc.tileOnMap(tile) && methods.calc.canReach(tile, true)) {
-				boolean didAction = false;
-				if (bankBooth != null) {
-					didAction = bankBooth.interact("Use-quickly");
-				} else if (banker != null) {
-					didAction = banker.interact("Bank Banker") || banker.interact("Bank", "Banker") || banker.interact("Bank", "Fremennik banker") ||
-							banker.interact("Bank", "Emerald Benedict") || banker.interact("Bank", "'Bird's-Eye' Jack") ||
-							banker.interact("Bank", "Fadli");
-				} else if (bankChest != null) {
-					didAction = bankChest.interact("Open", "Shantay chest") || bankChest.interact("Use", "Bank chest");
-				}
-				if (didAction) {
-					int count = 0;
-					while (!isOpen() && ++count < 10) {
-						sleep(random(200, 400));
-						if (methods.players.getMyPlayer().isMoving()) {
-							count = 0;
-						}
-					}
-				} else {
-					methods.camera.turnTo(tile);
-				}
-			} else if (tile != null) {
-				methods.walking.walkTileMM(tile);
-			}
-			return isOpen();
-		} catch (final Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+	 
+	 public boolean open() {
+	 	if (isOpen()) {
+	 		return true;
+	 		}
+	 		try {
+	 			if (methods.menu.isOpen()) {
+                        methods.mouse.moveRandomly(450);
+                        sleep(random(40,80));
+                    }
+                    Object[] banks = {methods.objects.getNearest(Bank.BANK_CHESTS), methods.objects.getNearest(Bank.BANK_BOOTHS), methods.npcs.getNearest(Bank.BANKERS)};
+                    int[] dis = {methods.calc.distanceTo((RSObject) banks[0]), methods.calc.distanceTo((RSObject) banks[1]), methods.calc.distanceTo((RSNPC) banks[2])};
+                    String[][] actions = {{"Open", "Use"}, {"Use-quickly"}, {"Bank"}};
+                    RSObject object = (RSObject) banks[1];
+                    RSNPC npc = (RSNPC) banks[2];
+                    String[] action = npc != null ? actions[2] : object != null ? actions[1] : null;
+                    /** find closest */
+                    if (object != null && npc != null) {
+                        if (dis[1] < dis[2]) {
+                            object = (RSObject) banks[1];
+                            action = actions[0];
+                            npc = null;
+                        } else {
+                            npc = (RSNPC) banks[2];
+                            action = actions[2];
+                            object = null;
+                        }
+                    }
+                    if (object == null && npc == null) {
+                        object = (RSObject) banks[0];
+                        action = actions[0];
+                    }
+                    RSTile tile = object == null ? npc == null ? null : npc.getLocation() : object.getLocation();
+                    String finalAction = null;
+                    boolean didAction = false;
+                    if (object != null && methods.calc.distanceTo(object) < 5) {
+                        methods.mouse.move(object.getPoint());
+                        RSObjectDef def = object.getDef();
+                        if (def != null) {
+                            outer:
+                        for (String s : action) {
+                            for (String i : def.getActions()) { // find correct action; instead of trying all.
+                                if (i != null && i.contains(s)) {
+                                    finalAction = s;
+                                    break outer;
+                                }
+                            }
+                        }
+                        didAction = finalAction != null ? object.interact(finalAction + " " + object.getName()) : false;
+                        } else {
+                            for (int i = 0; i < action.length && !didAction; i++) {
+                                didAction = object.interact(action[i] + " " + object.getName());
+                            }
+                        }
+                    } else if (npc != null && methods.calc.distanceTo(npc.getLocation()) < 5) {
+                        methods.mouse.move(npc.getPoint());
+                        outer:
+                            for (String s : action) {
+                                for (String i : npc.getActions()) {
+                                    if (i != null && i.contains(s)) { // finding correct action
+                                        finalAction = s;
+                                        break outer;
+                                    }
+                                }
+                            }
+                            didAction = npc.interact(finalAction + " " + npc.getName());
+                    } else if (tile != null) {
+                        methods.walking.walkTileMM(tile);
+                    }
+                    if (didAction) {
+                        int count = 0;
+                        while (!isOpen() && ++count < 10) {
+                            sleep(random(100,200));
+                            if (methods.players.getMyPlayer().isMoving()) {
+                                count = 0;
+                            }
+                        }
+                    }
+                    return isOpen();
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+        }
 
 	/**
 	 * Opens one of the supported deposit boxes nearby. If they are not nearby, and they are not null,
