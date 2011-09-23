@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 public class GrandExchange extends MethodProvider {
 	private static final String HOST = "http://services.runescape.com";
 	private static final String GET = "/m=itemdb_rs/viewitem.ws?obj=";
+	private final static String WIKIHOST = "http://runescape.wikia.com/wiki/";
+	private final static String WIKIBASE = "Exchange:";
 
 	public static final int INTERFACE_GRAND_EXCHANGE = 105;
 	public static final int INTERFACE_BUY_SEARCH_BOX = 389;
@@ -1131,29 +1133,37 @@ public class GrandExchange extends MethodProvider {
 	 * @return An instance of GrandExchange.GEItem; <code>null</code> if unable
 	 *         to fetch data.
 	 */
-	public GEItem lookup(final String itemName) {
+	public GEItem lookup(String itemName) {
 		try {
-			final URL url = new URL(GrandExchange.HOST + "/m=itemdb_rs/results.ws?query=" + itemName + "&price=all&members=");
+			final URL url = new URL(WIKIHOST + WIKIBASE +makeNameEdits(itemName));
 			final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			String input;
 			while ((input = br.readLine()) != null) {
-				if (input.contains("<div id=\"search_results_text\">")) {
-					input = br.readLine();
-					if (input.contains("Your search for")) {
-						return null;
-					}
-				} else if (input.startsWith("<td><img src=")) {
-					final Matcher matcher = GrandExchange.PATTERN.matcher(input);
-					if (matcher.find()) {
-						if (matcher.group(2).contains(itemName)) {
-							return lookup(Integer.parseInt(matcher.group(1)));
-						}
-					}
+				if (input.contains("Lookup current price")) {
+					String[] inputs = input.split("\"");
+					int itemID = Integer.parseInt(inputs[1].split("obj=")[1]);
+					return lookup(itemID);
 				}
 			}
 		} catch (final IOException ignored) {
+			log.severe("Item not found!");
 		}
 		return null;
+	}
+	
+	private String makeNameEdits(String itemName) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String currString: itemName.trim().split(" ")) {
+			if (first || currString.length() < 1) {
+				sb.append(currString);
+				first = false;
+				continue;
+			}
+			sb.append('_');
+			sb.append(currString.substring(0, 1).toLowerCase() + currString.substring(1));
+		}
+		return sb.toString();
 	}
 
 	private double parse(String str) {
