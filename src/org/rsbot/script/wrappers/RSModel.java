@@ -146,7 +146,22 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 	 * @return true if clicked, false if failed.
 	 */
 	public boolean interact(final String action, final String option) {
+		final Point point = getPoint();
+		if (point == null) {
+			return false;
+		}
+		if ((point.x | point.y) == -1) {
+			return false;
+		}
 		try {
+			if (!contains(methods.mouse.getLocation())) {
+				methods.mouse.move(point);
+			}
+			return methods.menu.doAction(action, option);
+		} catch (Exception e) {
+			return false;
+		}
+		/*try {
 			for (int i = 0; i < 10; i++) {
 				if (contains(methods.mouse.getLocation())) {
 					if (methods.menu.doAction(action, option)) {
@@ -157,7 +172,7 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 			}
 		} catch (final Exception ignored) {
 		}
-		return false;
+		return false;*/
 	}
 
 	/**
