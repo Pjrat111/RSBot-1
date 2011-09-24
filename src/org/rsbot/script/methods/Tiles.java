@@ -138,9 +138,22 @@ public class Tiles extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean interact(final RSTile tile, final String action, final String option) {
+		final Point point = methods.calc.tileToScreen(tile);
+		if (point == null) {
+			return false;
+		}
+		if ((point.x | point.y) == -1) {
+			return false;
+		}
 		try {
+			methods.mouse.move(point, 5, 5);
+			return methods.menu.doAction(action, option);
+		} catch (Exception e) {
+			return false;
+		}
+		/*try {
 			for (int i = 0; i++ < 5; ) {
-				final Point location = methods.calc.tileToScreen(tile);
+				//final Point location = methods.calc.tileToScreen(tile);
 				if (location.x == -1 || location.y == -1) {
 					return false;
 				}
@@ -152,7 +165,7 @@ public class Tiles extends MethodProvider {
 			return false;
 		} catch (final Exception e) {
 			return false;
-		}
+		}*/
 	}
 
 	/**
