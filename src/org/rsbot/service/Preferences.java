@@ -18,6 +18,7 @@ public class Preferences {
 	public String sdnUser = "";
 	public boolean localScripts = true;
 	public boolean theme = true;
+        public boolean fbconnect = false;
 
 	private Preferences(final File store) {
 		this.store = store;
@@ -57,6 +58,9 @@ public class Preferences {
 		if (keys.containsKey("theme")) {
 			theme = IniParser.parseBool(keys.get("theme"));
 		}
+                if(keys.containsKey("fbconnect")){
+                        fbconnect = IniParser.parseBool(keys.get("fbconnect"));
+                }
 	}
 
 	public void save() {
@@ -65,6 +69,7 @@ public class Preferences {
 		keys.put("sdnUser", sdnUser);
 		keys.put("localScripts", Boolean.toString(localScripts));
 		keys.put("theme", Boolean.toString(theme));
+                keys.put("fbconnect", Boolean.toString(fbconnect));
 		final Map<String, Map<String, String>> data = new HashMap<String, Map<String, String>>(1);
 		data.put(IniParser.EMPTYSECTION, keys);
 		try {

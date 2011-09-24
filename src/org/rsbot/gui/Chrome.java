@@ -348,9 +348,8 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private void showScriptSelector(final Bot bot) {
-		if (AccountManager.getAccountNames() == null || AccountManager.getAccountNames().length == 0) {
-			log.warning("Please save an account before loading a script");
-			AccountManager.getInstance().showGUI();
+		if (AccountManager.getAccountNames() == null || AccountManager.getAccountNames().length == 1) {
+			log.warning("No accounts found, you'll be able to connect with facebook only.");
 		}
 		if (bot.getMethodContext() == null) {
 			log.warning("The client is still loading");

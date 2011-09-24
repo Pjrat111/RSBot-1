@@ -227,7 +227,7 @@ public class AccountManager extends JDialog implements ActionListener {
 			} else if (button.getToolTipText().equals("Remove")) {
 				final int row = table.getSelectedRow();
 				final String user = ((AccountTableModel) table.getModel()).userForRow(row);
-				if (user != null) {
+				if (user != null && !user.equalsIgnoreCase(AccountStore.FACEBOOK_ACCOUNT.getUsername())) {
 					accountStore.remove(user);
 					((AccountTableModel) table.getModel()).fireTableRowsDeleted(row, row);
 				}
