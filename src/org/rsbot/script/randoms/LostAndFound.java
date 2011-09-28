@@ -59,19 +59,17 @@ public class LostAndFound extends Random {
 		if (!activateCondition()) {
 			return -1;
 		}
-		if (objects.getNearest(appendN) != null) {
-			final int appendage = getOddAppendage();
-			try {
-				final RSObject obj = objects.getNearest(appendage);
-				if (!obj.isOnScreen()) {
-					walking.walkTileMM(obj.getLocation());
-				} else {
-					if (obj.interact("Operate")) {
-						sleep(1000, 1500);
-					}
+		final int appendage = getOddAppendage();
+		try {
+			final RSObject obj = objects.getNearest(appendage);
+			if (!obj.isOnScreen()) {
+				walking.walkTileMM(obj.getLocation());
+			} else {
+				if (obj.interact("Operate")) {
+					sleep(1000, 1500);
 				}
-			} catch (final Exception ignored) {
 			}
+		} catch (final Exception ignored) {
 		}
 		return random(1000, 2000);
 	}
