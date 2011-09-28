@@ -7,7 +7,8 @@ import org.rsbot.script.wrappers.RSObject;
 
 /**
  * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
- * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
+ * Updated by Dunnkers 28-09-2011: Fixed a condition where the random is
+ * completed, but the component still contains the text "Abyssal Service".
  */
 @ScriptManifest(authors = {"Garrett"}, name = "LostAndFound", version = 1.1)
 public class LostAndFound extends Random {
