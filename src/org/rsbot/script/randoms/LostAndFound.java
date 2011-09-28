@@ -56,7 +56,7 @@ public class LostAndFound extends Random {
 		if (getMyPlayer().isMoving()) {
 			return random(200, 300);
 		}
-		if (objects.getNearest(appendN) == null && !interfaces.getComponent(210, 1).containsText("Abyssal Service")) {
+		if (!activateCondition()) {
 			return -1;
 		}
 		if (objects.getNearest(appendN) != null) {
