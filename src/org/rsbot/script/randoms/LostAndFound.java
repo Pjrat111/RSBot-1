@@ -48,7 +48,7 @@ public class LostAndFound extends Random {
 			}
 		} catch (final Exception ignored) {
 		}
-		return random(8994, 8998);
+		return allAppendages[random(0, allAppendages.length)];
 	}
 
 	@Override
