@@ -2,6 +2,7 @@ package org.rsbot.script.randoms;
 
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSObject;
 
 /**
@@ -28,7 +29,11 @@ public class LostAndFound extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return game.isLoggedIn() && (objects.getNearest(appendN) != null || interfaces.getComponent(210, 1).containsText("Abyssal Service"));
+		final RSComponent component = interfaces.getComponent(210, 1);
+		return game.isLoggedIn() && 
+				(objects.getNearest(allAppendages) != null || 
+				component.containsText("Abyssal Service") &&
+				!component.containsText("apologises for the inconvenience"));
 	}
 
 	private int getOddAppendage() {
