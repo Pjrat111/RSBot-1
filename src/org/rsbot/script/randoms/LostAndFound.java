@@ -7,9 +7,11 @@ import org.rsbot.script.wrappers.RSObject;
 
 /**
  * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
+ * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
  */
 @ScriptManifest(authors = {"Garrett"}, name = "LostAndFound", version = 1.1)
 public class LostAndFound extends Random {
+	
 	private final static int appendN = 8995;
 	private final static int appendE = 8994;
 	private final static int appendS = 8997;
@@ -63,7 +65,9 @@ public class LostAndFound extends Random {
 		try {
 			final RSObject obj = objects.getNearest(appendage);
 			if (!obj.isOnScreen()) {
-				walking.walkTileMM(obj.getLocation());
+				if (walking.walkTileMM(obj.getLocation())) {
+					sleep(500, 750);
+				}
 			} else {
 				if (obj.interact("Operate")) {
 					sleep(1000, 1500);
