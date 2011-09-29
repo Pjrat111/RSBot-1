@@ -195,7 +195,7 @@ public class Walking extends MethodProvider {
 	public boolean rest(final int stopEnergy) {
 		int energy = getEnergy();
 		for (int d = 0; d < 5; d++) {
-			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 1).interact("Rest");
+			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 6).interact("Rest");
 			methods.mouse.moveSlightly();
 			sleep(random(400, 600));
 			final int anim = methods.players.getMyPlayer().getAnimation();
@@ -220,7 +220,7 @@ public class Walking extends MethodProvider {
 	 */
 	public void setRun(final boolean enable) {
 		if (isRunEnabled() != enable) {
-			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 0).doClick();
+			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 6).doClick();
 		}
 	}
 
