@@ -55,6 +55,7 @@ public class AccountStore {
 		}
 	}
 
+        public static final Account FACEBOOK_ACCOUNT = new Account("Facebook");
 	private static final String KEY_ALGORITHM = "DESede";
 	private static final String CIPHER_TRANSFORMATION = "DESede/CBC/PKCS5Padding";
 	private static final int FORMAT_VERSION = 2;
@@ -140,6 +141,9 @@ public class AccountStore {
 		if (current != null) {
 			accounts.put(current.username, current);
 		}
+                if(!accounts.containsKey("Facebook")){
+                    accounts.put(FACEBOOK_ACCOUNT.getUsername(), FACEBOOK_ACCOUNT);
+                }
 		br.close();
 	}
 

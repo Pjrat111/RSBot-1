@@ -136,6 +136,7 @@ public class Game extends MethodProvider {
 	public static final int[] INDEX_LOGGED_IN = {11, 12};
 	public static final int INDEX_LOGIN_SCREEN = 3;
 	public static final int INDEX_LOBBY_SCREEN = 7;
+        public static final int INDEX_LOGGING_IN = 5;
 	public static final int INDEX_FIXED = 746;
 
 	@Deprecated
