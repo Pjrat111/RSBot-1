@@ -121,7 +121,7 @@ public class DrillDemon extends Random {
 			} else {
 				if (getMyPlayer().getAnimation() == -1) {
 					if (mats[signID].interact("Use")) {
-						sleep(500);
+						sleep(900);
 						return true;
 					}
 				}
