@@ -116,12 +116,12 @@ public class DrillDemon extends Random {
 		if (mats[signID] != null) {
 			if (!mats[signID].isOnScreen()) {
 				if (walking.walkTileMM(mats[signID].getLocation())) {
-					sleep(500);
+					sleep(900);
 				}
 			} else {
 				if (getMyPlayer().getAnimation() == -1) {
 					if (mats[signID].interact("Use")) {
-						sleep(500);
+						sleep(800);
 						return true;
 					}
 				}
