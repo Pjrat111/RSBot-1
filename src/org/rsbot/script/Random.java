@@ -10,6 +10,7 @@ import java.util.logging.Level;
 public abstract class Random extends Methods implements PaintListener {
 	private String name;
 	private volatile boolean enabled = true;
+        public volatile boolean DISABLE_PAINT = false;
 	private Script script;
 	private final long timeout = random(240, 300);
 
@@ -122,6 +123,9 @@ public abstract class Random extends Methods implements PaintListener {
 	}
 
 	public final void onRepaint(final Graphics g) {
+            if(DISABLE_PAINT){
+                return;
+            }
 		final Point p = mouse.getLocation();
 		final int w = game.getWidth(), h = game.getHeight();
 		g.setColor(new Color(28, 107, 160, 100));
