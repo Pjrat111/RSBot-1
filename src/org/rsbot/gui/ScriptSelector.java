@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,11 +45,15 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private final List<ScriptDefinition> scripts;
 	private JButton submit, connect, local;
 	public static boolean connectPrompted = false;
-
+        public static ArrayList<String> ACCOUNT_NAME = new ArrayList<String>();
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
+                ACCOUNT_NAME.addAll(Arrays.asList(AccountManager.getAccountNames()));
+                if(ACCOUNT_NAME.contains("Facebook")){
+                    ACCOUNT_NAME.remove("Facebook");
+                }
 	}
 
 	public ScriptSelector(final Chrome frame, final Bot bot) {
@@ -74,11 +79,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	void update() {
-		final boolean available = bot.getScriptHandler().getRunningScripts().size() == 0;
+		final boolean available = bot.getScriptHandler().getRunningScripts().isEmpty();
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
 		search.setEnabled(available);
-		accounts.setEnabled(available);
+		accounts.setEnabled(available && !ACCOUNT_NAME.isEmpty() && !Preferences.getInstance().fbconnect);
 		table.clearSelection();
 	}
 
@@ -86,7 +91,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		scripts.clear();
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
-		local.setEnabled(scripts.size() != 0);
+		local.setEnabled(!scripts.isEmpty());
 		final List<ScriptDefinition> net = SRC_NETWORK.list();
 		if (net != null) {
 			scripts.addAll(net);
@@ -112,7 +117,16 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DISCONNECT)));
 		connect.setFocusable(false);
-		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
+                final JToggleButton fbconnect = new JToggleButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_FBCONNECT)));
+		fbconnect.setToolTipText("Connect to runescape with facebook");
+                fbconnect.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        accounts.setEnabled(!fbconnect.isSelected() && !ACCOUNT_NAME.isEmpty());
+                        fbconnect.setSelected(ACCOUNT_NAME.isEmpty());
+                    }
+                });
+                fbconnect.setSelected(Preferences.getInstance().fbconnect);
+                final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.setFocusable(false);
 		refresh.addActionListener(new ActionListener() {
@@ -281,7 +295,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table.getSelectedRow());
 				setVisible(false);
-				final String account = (String) accounts.getSelectedItem();
+                                Preferences.getInstance().fbconnect = fbconnect.isSelected();
+				final String account = fbconnect.isSelected() ? "Facebook" : (String) accounts.getSelectedItem();
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
 				dispose();
 				Script script = null;
@@ -315,7 +330,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		connectUpdate();
-		accounts = new JComboBox(AccountManager.getAccountNames());
+		accounts = new JComboBox(ACCOUNT_NAME.toArray(new String[ACCOUNT_NAME.size()]));
+                accounts.setEnabled(!ACCOUNT_NAME.isEmpty() && !Preferences.getInstance().fbconnect);
 		accounts.setFocusable(accounts.getItemCount() > 1);
 		categories = new JComboBox(new String[]{"All", "Agility", "Combat", "Construction", "Cooking", "Crafting", "Dungeoneering", "Farming",
 				"Firemaking", "Fishing", "Fletching", "Herblore", "Hunter", "Magic", "Minigame", "Mining", "Other", "Money Making", "Prayer",
@@ -345,8 +361,14 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(categories);
 		toolBar.add(Box.createHorizontalStrut(5));
+                toolBar.addSeparator();
+                toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
 		toolBar.add(Box.createHorizontalStrut(5));
+                toolBar.add(fbconnect);
+                toolBar.add(Box.createHorizontalStrut(5));
+                toolBar.addSeparator();
+                toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(local);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(connect);

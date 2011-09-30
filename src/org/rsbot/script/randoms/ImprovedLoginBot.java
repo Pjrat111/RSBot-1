@@ -8,6 +8,8 @@ import org.rsbot.script.methods.Lobby;
 import org.rsbot.script.wrappers.RSComponent;
 
 import java.awt.*;
+import org.rsbot.script.util.Timer;
+import org.rsbot.service.Preferences;
 
 /**
  * A task to login to the game of Runescape.
@@ -22,12 +24,14 @@ public class ImprovedLoginBot extends Random {
 	public static final int INTERFACE_LOGIN_SCREEN_PASSWORD_TEXT = 79;
 	public static final int INTERFACE_LOGIN_SCREEN_ALERT_TEXT = 14;
 	public static final int INTERFACE_LOGIN_SCREEN_ALERT_BACK = 68;
+        public static final int INTERFACE_LOGIN_SCREEN_FACEBOOK = 51;
+        public static final int INTERFACE_LOGIN_SCREEN_ABORT_LOGIN = 19;
 	public static final int INTERFACE_GRAPHICS_NOTICE = 976;
 	public static final int INTERFACE_GRAPHICS_LEAVE_ALONE = 6;
 	public static final int INTERFACE_LOBBY_HIGH_RISK_WORLD_TEXT = 98;
 
 	private int world = -1;
-
+        private static final int timeout = 12000; // for fbconnecting.
 	public static final int INTERFACE_LOBBY_HIGH_RISK_WORLD_LOGIN_BUTTON = 104;
 
 	private enum LoginEvent {
@@ -88,7 +92,19 @@ public class ImprovedLoginBot extends Random {
 				}
 			}
 		}
-		if (game.getClientState() == Game.INDEX_LOGIN_SCREEN) {
+                if(game.getClientState() == Game.INDEX_LOGGING_IN && Preferences.getInstance().fbconnect){
+                    if(interfaces.getComponent(INTERFACE_LOGIN_SCREEN, INTERFACE_LOGIN_SCREEN_ALERT_TEXT).getText().toLowerCase().trim().contains("logging in - please wait")){
+                        log.info("Waiting for facebook connection");
+                        Timer t = new Timer(timeout);
+                        while(t.isRunning() && game.getClientState() == Game.INDEX_LOGGING_IN){
+                            sleep(100);
+                        }
+                        if(game.getClientState() == Game.INDEX_LOGGING_IN){
+                            return  interfaces.getComponent(INTERFACE_LOGIN_SCREEN, INTERFACE_LOGIN_SCREEN_ABORT_LOGIN).doClick() ? 500 : 0;
+                        }
+                        return 500;
+                    }
+                }else if (game.getClientState() == Game.INDEX_LOGIN_SCREEN) {
 			if (interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE, INTERFACE_GRAPHICS_LEAVE_ALONE).isValid()) {
 				interfaces.getComponent(INTERFACE_GRAPHICS_NOTICE, INTERFACE_GRAPHICS_LEAVE_ALONE).doClick();
 				return random(500, 600);
@@ -110,6 +126,9 @@ public class ImprovedLoginBot extends Random {
 					return event.sleep;
 				}
 			}
+                        if(account.getName().equalsIgnoreCase("Facebook")){
+                            return interfaces.getComponent(INTERFACE_LOGIN_SCREEN, INTERFACE_LOGIN_SCREEN_FACEBOOK).doClick() ? 500 : 0;
+                        }
 			if (isUsernameCorrect() && isPasswordValid()) {
 				attemptLogin();
 				return random(1200, 1500);
