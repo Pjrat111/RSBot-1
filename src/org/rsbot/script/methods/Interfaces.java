@@ -129,7 +129,7 @@ public class Interfaces extends MethodProvider {
 		}
 		final RSInterface[] valid = getAll();
 		for (final RSInterface iface : valid) {
-			if (iface.getIndex() != 137 && iface.getIndex() != 752) {
+			if (iface.getIndex() != 137 || (iface.getIndex() == 752 && !getComponent(752, 4).containsText("Welcome to RuneScape"))) {
 				final int len = iface.getChildCount();
 				for (int i = 0; i < len; i++) {
 					final RSComponent child = iface.getComponent(i);
