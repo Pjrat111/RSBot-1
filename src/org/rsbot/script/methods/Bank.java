@@ -478,29 +478,33 @@ public class Bank extends MethodProvider {
 	 *         <tt>false</tt>.
 	 */
 	public boolean openDepositBox() {
+		if (isDepositOpen()) {
+			return false;
+		}
 		try {
-			if (!isDepositOpen()) {
-				if (methods.menu.isOpen()) {
-					methods.mouse.moveSlightly();
-					sleep(random(20, 30));
-				}
-				final RSObject depositBox = methods.objects.getNearest(DEPOSIT_BOXES);
-				if (depositBox != null && methods.calc.distanceTo(depositBox) < 8 && methods.calc.tileOnMap(depositBox.getLocation()) && methods.calc.canReach(depositBox.getLocation(), true)) {
-					if (depositBox.interact("Deposit")) {
-						int count = 0;
-						while (!isDepositOpen() && ++count < 10) {
-							sleep(random(200, 400));
-							if (methods.players.getMyPlayer().isMoving()) {
-								count = 0;
-							}
+			if (methods.menu.isOpen()) {
+				methods.mouse.moveSlightly();
+				sleep(random(20, 30));
+			}
+			final RSObject depositBox = methods.objects.getNearest(DEPOSIT_BOXES);
+			if (depositBox == null) {
+				return false;
+			}
+			if (methods.calc.distanceTo(depositBox) < 5 && methods.calc.tileOnMap(depositBox.getLocation()) && methods.calc.canReach(depositBox.getLocation(), true)) {
+				if (depositBox.interact("Deposit")) {
+					int count = 0;
+					while (!isDepositOpen() && ++count < 10) {
+						sleep(random(200, 400));
+						if (methods.players.getMyPlayer().isMoving()) {
+							count = 0;
 						}
-					} else {
-						methods.camera.turnTo(depositBox, 20);
 					}
 				} else {
-					if (depositBox != null) {
-						methods.walking.walkTo(depositBox.getLocation());
-					}
+					methods.camera.turnTo(depositBox, 20);
+				}
+			} else {
+				if (!methods.walking.walkTo(depositBox.getLocation())) {
+					methods.walking.walkTileMM(depositBox.getLocation());
 				}
 			}
 			return isDepositOpen();

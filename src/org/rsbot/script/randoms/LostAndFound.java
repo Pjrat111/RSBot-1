@@ -2,13 +2,17 @@ package org.rsbot.script.randoms;
 
 import org.rsbot.script.Random;
 import org.rsbot.script.ScriptManifest;
+import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSObject;
 
 /**
  * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
+ * Updated by Dunnkers 28-09-2011: Fixed a condition where the random is
+ * completed, but the component still contains the text "Abyssal Service".
  */
 @ScriptManifest(authors = {"Garrett"}, name = "LostAndFound", version = 1.1)
 public class LostAndFound extends Random {
+	
 	private final static int appendN = 8995;
 	private final static int appendE = 8994;
 	private final static int appendS = 8997;
@@ -28,7 +32,11 @@ public class LostAndFound extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return game.isLoggedIn() && (objects.getNearest(appendN) != null || interfaces.getComponent(210, 1).containsText("Abyssal Service"));
+		final RSComponent component = interfaces.getComponent(210, 1);
+		return game.isLoggedIn() && 
+				(objects.getNearest(allAppendages) != null || 
+				component.containsText("Abyssal Service") &&
+				!component.containsText("apologises for the inconvenience"));
 	}
 
 	private int getOddAppendage() {
@@ -43,7 +51,7 @@ public class LostAndFound extends Random {
 			}
 		} catch (final Exception ignored) {
 		}
-		return random(8994, 8998);
+		return allAppendages[random(0, allAppendages.length)];
 	}
 
 	@Override
@@ -51,22 +59,22 @@ public class LostAndFound extends Random {
 		if (getMyPlayer().isMoving()) {
 			return random(200, 300);
 		}
-		if (objects.getNearest(appendN) == null && !interfaces.getComponent(210, 1).containsText("Abyssal Service")) {
+		if (!activateCondition()) {
 			return -1;
 		}
-		if (objects.getNearest(appendN) != null) {
-			final int appendage = getOddAppendage();
-			try {
-				final RSObject obj = objects.getNearest(appendage);
-				if (!obj.isOnScreen()) {
-					walking.walkTileMM(obj.getLocation());
-				} else {
-					if (obj.interact("Operate")) {
-						sleep(1000, 1500);
-					}
+		final int appendage = getOddAppendage();
+		try {
+			final RSObject obj = objects.getNearest(appendage);
+			if (!obj.isOnScreen()) {
+				if (walking.walkTileMM(obj.getLocation())) {
+					sleep(500, 750);
 				}
-			} catch (final Exception ignored) {
+			} else {
+				if (obj.interact("Operate")) {
+					sleep(1000, 1500);
+				}
 			}
+		} catch (final Exception ignored) {
 		}
 		return random(1000, 2000);
 	}
