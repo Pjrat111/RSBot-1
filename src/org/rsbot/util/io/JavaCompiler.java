@@ -3,44 +3,68 @@ package org.rsbot.util.io;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import java.io.*;
+import java.util.Arrays;
+import java.util.concurrent.Callable;
 
-public class JavaCompiler {
+/**
+ * @author Paris
+ */
+public class JavaCompiler implements Callable<Boolean> {
 	private final static String JAVACARGS = "-g:none";
+	private final File source;
+	private final String classPath;
 
-	public static boolean run(final File source, final String classPath) {
-		final javax.tools.JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+	public JavaCompiler(final File source, final String classPath) {
+		this.source = source;
+		this.classPath = classPath;
+	}
+
+	@Override
+	public Boolean call() {
 		try {
-			if (javac != null) {
-				return compileNative(javac, new FileInputStream(source), classPath) == 0;
-			} else {
-				compileSystem(source, classPath);
-				return true;
-			}
+			return compileNative() || compileSystem();
 		} catch (final IOException ignored) {
+			return false;
 		}
-		return false;
 	}
 
 	public static boolean isAvailable() {
 		return !(ToolProvider.getSystemJavaCompiler() == null && findJavac() == null);
 	}
 
-	private static int compileNative(final javax.tools.JavaCompiler javac, final InputStream source, final String classPath) throws FileNotFoundException {
-		final FileOutputStream[] out = new FileOutputStream[2];
-		for (int i = 0; i < 2; i++) {
-			out[i] = new FileOutputStream(new File(Configuration.Paths.getGarbageDirectory(), "compile." + Integer.toString(i) + ".txt"));
+	private boolean compileNative() {
+		final javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		if (compiler == null) {
+			return false;
 		}
-		return javac.run(source, out[0], out[1], JAVACARGS, "-cp", classPath);
+		final DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<JavaFileObject>();
+		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnosticsCollector, null, null);
+		Iterable<? extends JavaFileObject> fileObjects = fileManager.getJavaFileObjects(new File[] { source });
+		try {
+			fileManager.setLocation(StandardLocation.CLASS_PATH, Arrays.asList(new File[] { new File(classPath) }));
+		} catch (final IOException ignored) {
+		}
+		return compiler.getTask(null, fileManager, diagnosticsCollector, null, null, fileObjects).call();
 	}
 
-	private static void compileSystem(final File source, final String classPath) throws IOException {
+	private boolean compileSystem() throws IOException {
 		String javac = findJavac();
 		if (javac == null) {
 			throw new IOException();
 		}
-		Runtime.getRuntime().exec(new String[]{javac, JAVACARGS, "-cp", classPath, source.getAbsolutePath()});
+		final Process process = Runtime.getRuntime().exec(new String[]{javac, JAVACARGS, "-cp", classPath, source.getAbsolutePath()});
+		try {
+			process.waitFor();
+		} catch (final InterruptedException ignored) {
+		}
+		final int result = process.exitValue();
+		return result == 0;
 	}
 
 	private static String findJavac() {

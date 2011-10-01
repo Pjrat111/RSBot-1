@@ -118,7 +118,7 @@ public class ScriptDownloader {
 			} else {
 				compileClassPath = new File(Configuration.Paths.ROOT + File.separator + "bin").getAbsolutePath();
 			}
-			result = JavaCompiler.run(classFile, compileClassPath);
+			result = new JavaCompiler(classFile, compileClassPath).call();
 		}
 
 		// notify user of result
