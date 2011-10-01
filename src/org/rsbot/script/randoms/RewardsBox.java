@@ -28,7 +28,6 @@ public class RewardsBox extends Random {
         int INTERFACE_XP_SELECTION = 1139;
         int INTERFACE_XP_CONFIRM_ID = 2;
         int BOX_ID = 14664;
-        int REWARD_BOX_ID = 14197;
         int BOOK_KNOWLEDGE_ID = 11640;
         int LAMP_ID = 2528;
         int MYSTERY_BOX_ID = 6199;

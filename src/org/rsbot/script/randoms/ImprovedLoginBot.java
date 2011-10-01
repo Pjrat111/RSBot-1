@@ -10,7 +10,6 @@ import org.rsbot.script.wrappers.RSComponent;
 import java.awt.*;
 import org.rsbot.script.AccountStore;
 import org.rsbot.script.util.Timer;
-import org.rsbot.service.Preferences;
 
 /**
  * A task to login to the game of Runescape.
