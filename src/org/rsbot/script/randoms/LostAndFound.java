@@ -37,7 +37,7 @@ public class LostAndFound extends Random {
 		return game.isLoggedIn() && 
 				(objects.getNearest(allAppendages) != null || 
 				component.containsText("Abyssal Service") &&
-				!component.containsText("apologises for the inconvenience"));
+				component.containsText("apologises for the inconvenience"));
 	}
 
 	private int getOddAppendage() {
@@ -60,11 +60,12 @@ public class LostAndFound extends Random {
 		if (getMyPlayer().isMoving()) {
 			return random(200, 300);
 		}
-		if (interfaces.canContinue()) {	
-			interfaces.clickContinue();	
-		}
 		if (!activateCondition()) {
 			return -1;
+		}
+		if (interfaces.canContinue()) {	
+			interfaces.clickContinue();
+			return 100;
 		}
 		final int appendage = getOddAppendage();
 		try {
