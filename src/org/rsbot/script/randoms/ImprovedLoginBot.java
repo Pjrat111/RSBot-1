@@ -8,6 +8,7 @@ import org.rsbot.script.methods.Lobby;
 import org.rsbot.script.wrappers.RSComponent;
 
 import java.awt.*;
+import org.rsbot.script.AccountStore;
 import org.rsbot.script.util.Timer;
 import org.rsbot.service.Preferences;
 
@@ -92,7 +93,7 @@ public class ImprovedLoginBot extends Random {
 				}
 			}
 		}
-                if(game.getClientState() == Game.INDEX_LOGGING_IN && Preferences.getInstance().fbconnect){
+                if(game.getClientState() == Game.INDEX_LOGGING_IN && account.getName().equalsIgnoreCase(AccountStore.FACEBOOK_ACCOUNT.getUsername())){
                     if(interfaces.getComponent(INTERFACE_LOGIN_SCREEN, INTERFACE_LOGIN_SCREEN_ALERT_TEXT).getText().toLowerCase().trim().contains("logging in - please wait")){
                         log.info("Waiting for facebook connection");
                         Timer t = new Timer(timeout);
