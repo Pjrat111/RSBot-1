@@ -12,7 +12,7 @@ import org.rsbot.script.methods.Game.Tab;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSItem;
 
-@ScriptManifest (authors = {"xMunch", "Emeleo"}, version = 2.0, name = "ImprovedRewardsBox")
+@ScriptManifest (authors = {"xMunch", "Emeleo"}, version = 2.0, name = "RewardsBox")
 public class RewardsBox extends Random {
 
     private Reward SELECTED_REWARD = null;
