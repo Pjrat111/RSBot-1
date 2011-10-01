@@ -121,18 +121,19 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DISCONNECT)));
 		connect.setFocusable(false);
-                final JToggleButton fbconnect = new JToggleButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_FBCONNECT)));
-		fbconnect.setToolTipText("Connect to runescape with facebook");
-                fbconnect.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {                       
-                        accounts.setEnabled(!fbconnect.isSelected() && !ACCOUNT_NAME.isEmpty());
-                        if(ACCOUNT_NAME.isEmpty()){
-                            fbconnect.setSelected(true);
-                        }
-                    }
-                });
-                fbconnect.setSelected(Preferences.getInstance().fbconnect);
-                final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
+		final JToggleButton fbconnect = new JToggleButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_FACEBOOK)));
+		fbconnect.setFocusable(false);
+		fbconnect.setToolTipText("Log in with Facebook");
+		fbconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				accounts.setEnabled(!fbconnect.isSelected() && !ACCOUNT_NAME.isEmpty());
+				if (ACCOUNT_NAME.isEmpty()) {
+					fbconnect.setSelected(true);
+				}
+			}
+		});
+		fbconnect.setSelected(Preferences.getInstance().fbconnect);
+		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.setFocusable(false);
 		refresh.addActionListener(new ActionListener() {
