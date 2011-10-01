@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import org.rsbot.script.AccountStore;
 
 /**
  * @author Paris
@@ -51,8 +52,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
                 ACCOUNT_NAME.addAll(Arrays.asList(AccountManager.getAccountNames()));
-                if(ACCOUNT_NAME.contains("Facebook")){
-                    ACCOUNT_NAME.remove("Facebook");
+                if(ACCOUNT_NAME.contains(AccountStore.FACEBOOK_ACCOUNT.getUsername())){
+                    ACCOUNT_NAME.remove(AccountStore.FACEBOOK_ACCOUNT.getUsername());
                 }
 	}
 
@@ -79,6 +80,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	void update() {
+            updateAccounts();
 		final boolean available = bot.getScriptHandler().getRunningScripts().isEmpty();
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
@@ -88,6 +90,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void load() {
+            updateAccounts();
 		scripts.clear();
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
@@ -103,6 +106,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void init() {
+            updateAccounts();
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -120,9 +124,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
                 final JToggleButton fbconnect = new JToggleButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_FBCONNECT)));
 		fbconnect.setToolTipText("Connect to runescape with facebook");
                 fbconnect.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(ActionEvent e) {                       
                         accounts.setEnabled(!fbconnect.isSelected() && !ACCOUNT_NAME.isEmpty());
-                        fbconnect.setSelected(ACCOUNT_NAME.isEmpty());
+                        if(ACCOUNT_NAME.isEmpty()){
+                            fbconnect.setSelected(true);
+                        }
                     }
                 });
                 fbconnect.setSelected(Preferences.getInstance().fbconnect);
@@ -529,4 +535,12 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return COLUMN_NAMES[col];
 		}
 	}
+
+        private void updateAccounts(){
+            ACCOUNT_NAME.clear();
+            ACCOUNT_NAME.addAll(Arrays.asList(AccountManager.getAccountNames()));
+            if(ACCOUNT_NAME.contains(AccountStore.FACEBOOK_ACCOUNT.getUsername())){
+                ACCOUNT_NAME.remove(AccountStore.FACEBOOK_ACCOUNT.getUsername());
+            }
+        }
 }

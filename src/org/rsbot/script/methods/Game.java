@@ -428,17 +428,17 @@ public class Game extends MethodProvider {
 	}
 
 	/**
-	 * Excludes Loginbot, BankPin, TeleotherCloser, CloseAllInterface, ImprovedRewardsBox
+	 * Excludes Loginbot, BankPin, TeleotherCloser, CloseAllInterface, RewardsBox
 	 *
 	 * @return True if player is in a random
 	 */
-	public Boolean inRandom() {
+	public boolean inRandom() {
 		for (final Random random : methods.bot.getScriptHandler().getRandoms()) {
 			if (random.getClass().equals(new ImprovedLoginBot()) ||
 					random.getClass().equals(new BankPins()) ||
 					random.getClass().equals(new TeleotherCloser()) ||
 					random.getClass().equals(new CloseAllInterface()) ||
-					random.getClass().equals(new ImprovedRewardsBox())) {
+					random.getClass().equals(new RewardsBox())) {
 			} else {
 				if (random.activateCondition()) {
 					return true;

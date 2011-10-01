@@ -35,7 +35,7 @@ public class ScriptHandler extends TaskContainer {
 			randoms.add(new FreakyForester());
 			randoms.add(new FrogCave());
 			randoms.add(new GraveDigger());
-			randoms.add(new ImprovedRewardsBox());
+			randoms.add(new RewardsBox());
 			randoms.add(new LostAndFound());
 			randoms.add(new Maze());
 			randoms.add(new Mime());
