@@ -9,6 +9,7 @@ import org.rsbot.script.wrappers.RSObject;
  * Updated by Arbiter 9/22/10: Replaced tile clicking with model clicking. :)
  * Updated by Dunnkers 28-09-2011: Fixed a condition where the random is
  * completed, but the component still contains the text "Abyssal Service".
+ * Updated by Dunnkers 1/10/2011; Fixed a problem that not clicking "Click here to continue" bug.
  */
 @ScriptManifest(authors = {"Garrett"}, name = "LostAndFound", version = 1.1)
 public class LostAndFound extends Random {
@@ -58,6 +59,9 @@ public class LostAndFound extends Random {
 	public int loop() {
 		if (getMyPlayer().isMoving()) {
 			return random(200, 300);
+		}
+		if (interfaces.canContinue()) {	
+			interfaces.clickContinue();	
 		}
 		if (!activateCondition()) {
 			return -1;
