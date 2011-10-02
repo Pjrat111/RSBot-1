@@ -71,6 +71,7 @@ public class Configuration {
 		}
 
 		public static class URLs {
+			public static final String GAME = "runescape.com";
 			public static final String HOST = "powerbot.org";
 			private static final String BASE = "http://links." + HOST + "/";
 			public static final String DOWNLOAD = BASE + "download";

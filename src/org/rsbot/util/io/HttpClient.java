@@ -16,33 +16,36 @@ import java.util.logging.Logger;
  */
 public class HttpClient {
 	private static final Logger log = Logger.getLogger(HttpClient.class.getName());
-	static String httpUserAgent = null;
+	public static final String HTTP_USERAGENT_FAKE, HTTP_USERAGENT_REAL;
 
-	public static String getHttpUserAgent() {
-		if (httpUserAgent == null) {
-			httpUserAgent = getDefaultHttpUserAgent();
+	static {
+		final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
+		final StringBuilder s = new StringBuilder(70);
+		s.append("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; ");
+		if (x64) {
+			s.append("WOW64; ");
+			s.append("Trident/5.0)");
 		}
-		return httpUserAgent;
+		HTTP_USERAGENT_FAKE = s.toString();
+		s.setLength(0);
+		s.append(Configuration.NAME);
+		s.append('/');
+		s.append(Configuration.getVersion());
+		s.append(" (");
+		s.append(System.getProperty("os.name"));
+		s.append(System.getProperty("os.version"));
+		s.append("; ");
+		s.append(System.getProperty("os.arch"));
+		s.append("; ");
+		s.append(System.getProperty("java.vendor"));
+		s.append('/');
+		s.append(System.getProperty("java.version"));
+		s.append(')');
+		HTTP_USERAGENT_REAL = s.toString();
 	}
 
-	private static String getDefaultHttpUserAgent() {
-		final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
-		final String os;
-		switch (Configuration.getCurrentOperatingSystem()) {
-			case MAC:
-				os = "Macintosh; Intel Mac OS X 10_6_6";
-				break;
-			case LINUX:
-				os = "X11; Linux " + (x64 ? "x86_64" : "i686");
-				break;
-			default:
-				os = "Windows NT 6.1" + (x64 ? "; WOW64" : "");
-				break;
-		}
-		final StringBuilder buf = new StringBuilder(125);
-		buf.append("Mozilla/5.0 (").append(os).append(")");
-		buf.append(" AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30");
-		return buf.toString();
+	public static String getHttpUserAgent(final URL url) {
+		return url.getHost().equalsIgnoreCase(Configuration.Paths.URLs.GAME) || url.getHost().toLowerCase().endsWith(Configuration.Paths.URLs.GAME) ? HTTP_USERAGENT_FAKE : HTTP_USERAGENT_REAL;
 	}
 
 	public static HttpURLConnection getHttpConnection(final URL url) throws IOException {
@@ -52,7 +55,7 @@ public class HttpClient {
 		con.addRequestProperty("Accept-Encoding", "gzip");
 		con.addRequestProperty("Accept-Language", "en-us,en;q=0.5");
 		con.addRequestProperty("Host", url.getHost());
-		con.addRequestProperty("User-Agent", getHttpUserAgent());
+		con.addRequestProperty("User-Agent", getHttpUserAgent(url));
 		con.setConnectTimeout(10000);
 		return con;
 	}
