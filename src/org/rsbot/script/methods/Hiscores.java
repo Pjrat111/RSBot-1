@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.rsbot.Configuration;
+
 /**
  * This class is used to fetch the stats of another player.
  * <p/>
@@ -15,7 +17,7 @@ import java.net.URL;
  * @version 0.2
  */
 public class Hiscores extends MethodProvider {
-	private static final String HOST = "http://hiscore.runescape.com";
+	private static final String HOST = "http://hiscore." + Configuration.Paths.URLs.GAME;
 	private static final String GET = "/index_lite.ws?player=";
 
 	public Hiscores() {

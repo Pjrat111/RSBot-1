@@ -1,5 +1,6 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.Configuration;
 import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSInterface;
@@ -102,7 +103,7 @@ public class Lobby extends MethodProvider {
 	public Object[][] getWorldObjects() {
 		String HTML = null;
 		try {
-			HTML = HttpClient.downloadAsString((new URL("http://www.runescape.com/slu.ws?order=WPMLA")));
+			HTML = HttpClient.downloadAsString((new URL("http://www." + Configuration.Paths.URLs.GAME + "/slu.ws?order=WPMLA")));
 		} catch (IOException ignored) {
 		}
 

@@ -1,5 +1,6 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.Configuration;
 import org.rsbot.gui.AccountManager;
 import org.rsbot.script.wrappers.*;
 
@@ -19,7 +20,7 @@ import java.net.URL;
  * @author kyleshay
  */
 public class GrandExchange extends MethodProvider {
-	private static final String HOST = "http://services.runescape.com";
+	private static final String HOST = "http://services." + Configuration.Paths.URLs.GAME;
 	private static final String GET = "/m=itemdb_rs/viewitem.ws?obj=";
 	private final static String WIKIHOST = "http://runescape.wikia.com/wiki/";
 	private final static String WIKIBASE = "Exchange:";

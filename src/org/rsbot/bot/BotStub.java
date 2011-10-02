@@ -126,7 +126,7 @@ public class BotStub implements AppletStub, AppletContext {
 		if (url.toString().contains("outofdate")) {
 			final String message = Configuration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
-		} else if(url.toString().startsWith("https://secure.runescape.com")){
+		} else if (url.toString().startsWith("https://secure." + Configuration.Paths.URLs.GAME)) {
 			Chrome.openURL(url.toString());
 		} else if (!target.equals("tbi")) {
 			log.info("Attempting to show: " + url.toString() + " [" + target + "]");
