@@ -1,16 +1,13 @@
 package org.rsbot.bot;
 
 import org.rsbot.Application;
-import org.rsbot.Configuration;
 import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 
 import java.applet.Applet;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -65,12 +62,6 @@ public class RSLoader extends Applet implements Runnable, Loader {
 			client.start();
 		} catch (final Throwable e) {
 			log.severe("Unable to load client, please check your firewall and internet connection.");
-			final File versionFile = new File(Configuration.Paths.getVersionCache());
-			if (versionFile.exists() && !versionFile.delete()) {
-				log.warning("Unable to clear cache.");
-			}
-
-			log.log(Level.SEVERE, "Error reason:", e);
 		}
 	}
 

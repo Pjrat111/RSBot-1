@@ -3,13 +3,11 @@ package org.rsbot.bot;
 import org.rsbot.Configuration;
 import org.rsbot.gui.Chrome;
 
-import javax.swing.*;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -128,11 +126,6 @@ public class BotStub implements AppletStub, AppletContext {
 		if (url.toString().contains("outofdate")) {
 			final String message = Configuration.NAME + " is currently outdated, please wait patiently for a new version.";
 			log.severe(message);
-			JOptionPane.showMessageDialog(null, message, "Outdated", JOptionPane.WARNING_MESSAGE);
-			final File versionFile = new File(Configuration.Paths.getVersionCache());
-			if (versionFile.exists() && !versionFile.delete()) {
-				log.warning("Unable to clear cache.");
-			}
 		} else if(url.toString().startsWith("https://secure.runescape.com")){
 			Chrome.openURL(url.toString());
 		} else if (!target.equals("tbi")) {
