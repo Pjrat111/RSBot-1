@@ -389,12 +389,12 @@ public class Bank extends MethodProvider {
 	 public boolean open() {
 	 	if (isOpen()) {
 	 		return true;
+	 	}
+	 	try {
+	 		if (methods.menu.isOpen()) {
+	 			methods.mouse.moveRandomly(450);
+	 			sleep(random(40,80));
 	 		}
-	 		try {
-	 			if (methods.menu.isOpen()) {
-                        methods.mouse.moveRandomly(450);
-                        sleep(random(40,80));
-                    }
                     Object[] banks = {methods.objects.getNearest(Bank.BANK_CHESTS), methods.objects.getNearest(Bank.BANK_BOOTHS), methods.npcs.getNearest(Bank.BANKERS)};
                     int[] dis = {methods.calc.distanceTo((RSObject) banks[0]), methods.calc.distanceTo((RSObject) banks[1]), methods.calc.distanceTo((RSNPC) banks[2])};
                     String[][] actions = {{"Open", "Use"}, {"Use-quickly"}, {"Bank"}};
@@ -405,7 +405,7 @@ public class Bank extends MethodProvider {
                     if (object != null && npc != null) {
                         if (dis[1] < dis[2]) {
                             object = (RSObject) banks[1];
-                            action = actions[0];
+                            action = actions[1];
                             npc = null;
                         } else {
                             npc = (RSNPC) banks[2];
