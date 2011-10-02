@@ -125,7 +125,7 @@ public class RewardsBox extends Random {
         String reward = account.getName() == null ? null : AccountManager.getReward(account.getName());
         if (reward != null) {
             for (Reward r : Reward.values()) {
-                if (r.name().equalsIgnoreCase(reward) && (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() ? (getRewardInterface(r).isValid() || r.XP_SELECTION != -1) : true)) {
+                if (r.name().equalsIgnoreCase(reward) && (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() ? getRewardInterface(r) != null : true)) {
                     return r;
                 }
             }
@@ -158,16 +158,19 @@ public class RewardsBox extends Random {
         if (!activateCondition()) {
             return -1;
         }
-        if (SELECTED_REWARD == null) {
-            SELECTED_REWARD = getSelectedReward();
-            log.info("Selecting " + SELECTED_REWARD.name() + " as reward.");
-        }
         game.openTab(Tab.INVENTORY, random(0, 5) == 3);
+        if (SELECTED_REWARD == null && (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() || interfaces.get(Values.INTERFACE_XP_SELECTION).isValid())) {
+            SELECTED_REWARD = getSelectedReward();
+            log.info("Selecting " + SELECTED_REWARD.name() + " as reward");
+        }
         switch (getState()) {
             case OPEN_RANDOM:
                 RSItem item = inventory.getItem(Values.ACTIVATION_ITEMS);
                 return item != null && item.doClick(true) ? random(3000, 3500) : 10;
             case HANDLE_BOX:
+                if (SELECTED_REWARD == null) {
+                    return 100;
+                }
                 /** validate selected reward*/
                 for (final RSComponent child : interfaces.get(137).getComponents()) {
                     if (!SELECTED_REWARD.equals(Reward.Emote)) {
@@ -191,6 +194,9 @@ public class RewardsBox extends Random {
                 /** Click reward & Confirm */
                 return REWARD_INTERFACE.doClick() && CONFIRM.doClick() ? random(500, 1500) : 10;
             case HANDLE_XP_REWARD:
+                if (SELECTED_REWARD == null) {
+                    return 100;
+                }
                 if (XP_POINT != null && XP_POINT.length > 0) {
                     mouse.click(XP_POINT[random(0, XP_POINT.length)], true);
                     sleep(100, 350);
