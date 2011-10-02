@@ -63,8 +63,7 @@ public class LostAndFound extends Random {
 		if (!activateCondition()) {
 			return -1;
 		}
-		if (interfaces.canContinue()) {	
-			interfaces.clickContinue();
+		if (interfaces.clickContinue() {	
 			return 100;
 		}
 		final int appendage = getOddAppendage();
