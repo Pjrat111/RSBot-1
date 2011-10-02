@@ -155,59 +155,59 @@ public class RewardsBox extends Random {
 
     @Override
     protected int loop() {
-            if (!activateCondition()) {
-                return -1;
-            }
-            game.openTab(Tab.INVENTORY, random(0, 5) == 3);
-            if (SELECTED_REWARD == null && (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() || interfaces.get(Values.INTERFACE_XP_SELECTION).isValid())) {
-                SELECTED_REWARD = getSelectedReward();
-                log.info("Selecting " + SELECTED_REWARD.name() + " as reward");
-            }
-            switch (getState()) {
-                case OPEN_RANDOM:
-                    RSItem item = inventory.getItem(Values.ACTIVATION_ITEMS);
-                    return item != null && item.doClick(true) ? random(3000, 3500) : 10;
-                case HANDLE_BOX:
-                    if (SELECTED_REWARD == null) {
-                        return 100;
-                    }
-                    /** validate selected reward*/
-                    for (final RSComponent child : interfaces.get(137).getComponents()) {
-                        if (!SELECTED_REWARD.equals(Reward.Emote)) {
-                            break;
-                        }
-                        if (child.containsText("You've already unlocked") && child.containsText("emotes")
-                                && !child.containsText("<col=0000ff>")) {
-                            SELECTED_REWARD = Values.DEFAULT_REWARD;
-                            break;
-                        }
-                    }
-                    /** scroll to reward interface */
-                    if (scrollTo(SELECTED_REWARD)) {
-                        sleep(300, 700);
-                    }
-                    RSComponent REWARD_INTERFACE = getRewardInterface(SELECTED_REWARD),
-                     CONFIRM = interfaces.getComponent(Values.INTERFACE_MAIN_BOX, Values.INTERFACE_BOX_CONFIRM_BUTTON);
-                    if (REWARD_INTERFACE == null || CONFIRM == null) {
-                        return 10;
-                    }
-                    /** Click reward & Confirm */
-                    return REWARD_INTERFACE.doClick() && CONFIRM.doClick() ? random(500, 1500) : 10;
-                case HANDLE_XP_REWARD:
-                    if (SELECTED_REWARD == null) {
-                        return 100;
-                    }
-                    if (XP_POINT != null && XP_POINT.length > 0) {
-                        mouse.click(XP_POINT[random(0, XP_POINT.length)], true);
-                        sleep(100, 350);
-                        return interfaces.getComponent(Values.INTERFACE_XP_SELECTION, Values.INTERFACE_XP_CONFIRM_ID).doClick() ? random(1900, 3500) : 10;
-                    } else {
-                        XP_POINT = getXPPoint(SELECTED_REWARD);
-                    }
+        if (!activateCondition()) {
+            return -1;
+        }
+        game.openTab(Tab.INVENTORY, random(0, 5) == 3);
+        if (SELECTED_REWARD == null && (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() || interfaces.get(Values.INTERFACE_XP_SELECTION).isValid())) {
+            SELECTED_REWARD = getSelectedReward();
+            log.info("Selecting " + SELECTED_REWARD.name() + " as reward");
+        }
+        switch (getState()) {
+            case OPEN_RANDOM:
+                RSItem item = inventory.getItem(Values.ACTIVATION_ITEMS);
+                return item != null && item.doClick(true) ? random(3000, 3500) : 10;
+            case HANDLE_BOX:
+                if (SELECTED_REWARD == null) {
                     return 100;
-                case ERROR:
+                }
+                /** validate selected reward*/
+                for (final RSComponent child : interfaces.get(137).getComponents()) {
+                    if (!SELECTED_REWARD.equals(Reward.Emote)) {
+                        break;
+                    }
+                    if (child.containsText("You've already unlocked") && child.containsText("emotes")
+                            && !child.containsText("<col=0000ff>")) {
+                        SELECTED_REWARD = Values.DEFAULT_REWARD;
+                        break;
+                    }
+                }
+                /** scroll to reward interface */
+                if (scrollTo(SELECTED_REWARD)) {
+                    sleep(300, 700);
+                }
+                RSComponent REWARD_INTERFACE = getRewardInterface(SELECTED_REWARD),
+                 CONFIRM = interfaces.getComponent(Values.INTERFACE_MAIN_BOX, Values.INTERFACE_BOX_CONFIRM_BUTTON);
+                if (REWARD_INTERFACE == null || CONFIRM == null) {
+                    return 10;
+                }
+                /** Click reward & Confirm */
+                return REWARD_INTERFACE.doClick() && CONFIRM.doClick() ? random(500, 1500) : 10;
+            case HANDLE_XP_REWARD:
+                if (SELECTED_REWARD == null) {
                     return 100;
-            }
+                }
+                if (XP_POINT != null && XP_POINT.length > 0) {
+                    mouse.click(XP_POINT[random(0, XP_POINT.length)], true);
+                    sleep(100, 350);
+                    return interfaces.getComponent(Values.INTERFACE_XP_SELECTION, Values.INTERFACE_XP_CONFIRM_ID).doClick() ? random(1900, 3500) : 10;
+                } else {
+                    XP_POINT = getXPPoint(SELECTED_REWARD);
+                }
+                return 100;
+            case ERROR:
+                return 100;
+        }
         return -1;
     }
 
