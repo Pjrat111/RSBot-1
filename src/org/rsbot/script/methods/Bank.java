@@ -16,7 +16,7 @@ public class Bank extends MethodProvider {
 			6084, 10517, 11402, 11758, 12759, 14367, 19230, 20325, 24914, 11338,
 			25808, 26972, 29085, 52589, 34752, 35647, 36786, 2012, 2015, 2019,
 			42217, 42377, 42378};
-	public static final int[] BANK_CHESTS = new int[]{4483, 12308, 20607,
+	public static final int[] BANK_CHESTS = new int[]{2693, 4483, 8981, 12308, 21301, 20607,
 			21301, 27663, 42192};
 	public static final int[] DEPOSIT_BOXES = {2045, 9398, 20228, 24995, 25937,
 			26969, 32924, 32930, 32931, 34755, 36788, 39830, 45079};
@@ -402,7 +402,7 @@ public class Bank extends MethodProvider {
 			}
 			Object[] banks = {methods.objects.getNearest(Bank.BANK_CHESTS), methods.objects.getNearest(Bank.BANK_BOOTHS), methods.npcs.getNearest(Bank.BANKERS)};
 			int[] dis = {methods.calc.distanceTo((RSObject) banks[0]), methods.calc.distanceTo((RSObject) banks[1]), methods.calc.distanceTo((RSNPC) banks[2])};
-			String[][] actions = {{"Open", "Use"}, {"Use-quickly"}, {"Bank"}};
+			String[][] actions = {{"Open", "Use", "Bank"}, {"Use-quickly"}, {"Bank"}};
 			RSObject object = (RSObject) banks[1];
 			RSNPC npc = (RSNPC) banks[2];
 			String[] action = npc != null ? actions[2] : object != null ? actions[1] : null;
