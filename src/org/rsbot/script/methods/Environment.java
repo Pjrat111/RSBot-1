@@ -12,7 +12,6 @@ import java.util.logging.Logger;
  */
 public class Environment extends MethodProvider {
 	public static final int INPUT_MOUSE = 1, INPUT_KEYBOARD = 2;
-	public static final int LOGIN_LOBBY = 1, LOGIN_GAME = 2;
 
 	private static final Logger log = Logger.getLogger("Environment");
 
