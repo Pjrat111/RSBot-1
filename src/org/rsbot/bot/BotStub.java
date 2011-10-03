@@ -28,11 +28,12 @@ public class BotStub implements AppletStub, AppletContext {
 	private boolean isActive;
 	private final Map<String, String> parameters;
 
+	public static Crawler crawler;
+
 	public BotStub(final RSLoader applet) {
 		this.applet = applet;
-		final Crawler c = new Crawler("http://www." + applet.getTargetName() + ".com/");
-		parameters = c.getParameters();
-		final String world_prefix = c.getWorldPrefix();
+		parameters = crawler.getParameters();
+		final String world_prefix = crawler.getWorldPrefix();
 		try {
 			codeBase = new URL("http://world" + world_prefix + "." + applet.getTargetName() + ".com");
 			documentBase = new URL("http://world" + world_prefix + "." + applet.getTargetName() + ".com/m0");

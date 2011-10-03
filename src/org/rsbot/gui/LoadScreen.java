@@ -1,28 +1,8 @@
 package org.rsbot.gui;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
 import org.rsbot.Configuration;
+import org.rsbot.bot.BotStub;
+import org.rsbot.bot.Crawler;
 import org.rsbot.gui.component.Messages;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.log.LabelLogHandler;
@@ -34,6 +14,20 @@ import org.rsbot.util.StringUtil;
 import org.rsbot.util.UpdateChecker;
 import org.rsbot.util.io.HttpClient;
 import org.rsbot.util.io.IOHelper;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Paris
@@ -128,7 +122,6 @@ public final class LoadScreen extends JDialog {
 	}
 
 	private final class LoadSettings implements Callable<Boolean> {
-		@Override
 		public Boolean call() {
 			log.info("Language: " + Messages.LANGUAGE);
 
@@ -171,7 +164,6 @@ public final class LoadScreen extends JDialog {
 		}
 
 		private final class ResourceExtractor implements Runnable {
-			@Override
 			public void run() {
 				if (Configuration.RUNNING_FROM_JAR) {
 					IOHelper.write(Configuration.Paths.getRunningJarPath(), new File(Configuration.Paths.getPathCache()));
@@ -193,7 +185,6 @@ public final class LoadScreen extends JDialog {
 	}
 
 	private final class LoadUpdates implements Callable<Boolean> {
-		@Override
 		public Boolean call() {
 			log.info("Checking for updates");
 			if (UpdateChecker.getLatestVersion() > Configuration.getVersion()) {
@@ -220,12 +211,13 @@ public final class LoadScreen extends JDialog {
 	}
 
 	private final class LoadClient implements Callable<Boolean> {
-		@Override
 		public Boolean call() {
 			boolean pass = true;
-			log.info("Starting game client");
+			log.info("Loading game client");
 			try {
 				ClientLoader.getInstance().load();
+				log.info("Crawling game");
+				BotStub.crawler = new Crawler("http://www." + ClientLoader.getTargetName() + ".com/");
 			} catch (final Exception e) {
 				log.severe("Client error: " + e.getMessage());
 				pass = false;
@@ -239,7 +231,6 @@ public final class LoadScreen extends JDialog {
 	}
 
 	private final class LoadSkin implements Callable<Boolean> {
-		@Override
 		public Boolean call() {
 			if (Configuration.isSkinAvailable() && Preferences.getInstance().theme) {
 				SwingUtilities.invokeLater(new Runnable() {
