@@ -161,31 +161,6 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 		} catch (Exception e) {
 			return false;
 		}
-		/*try {
-			for (int i = 0; i < 10; i++) {
-				if (contains(methods.mouse.getLocation())) {
-					if (methods.menu.doAction(action, option)) {
-						return true;
-					}
-				}
-				methods.mouse.move(getPoint());
-			}
-		} catch (final Exception ignored) {
-		}
-		return false;*/
-	}
-
-	/**
-	 * Clicks the RSModel and clicks the menu action
-	 *
-	 * @param action the action to be clicked in the menu
-	 * @param option the option of the action to be clicked in the menu
-	 * @return true if clicked, false if failed.
-	 * @see org.rsbot.script.wrappers.RSModel#interact(String, String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action, final String option) {
-		return interact(action, option);
 	}
 
 	/**
@@ -196,18 +171,6 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 	 */
 	public boolean interact(final String action) {
 		return interact(action, null);
-	}
-
-	/**
-	 * Clicks the RSModel and clicks the menu action
-	 *
-	 * @param action the action to be clicked in the menu
-	 * @return true if clicked, false if failed.
-	 * @see org.rsbot.script.wrappers.RSModel#interact(String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action) {
-		return interact(action);
 	}
 
 	/**

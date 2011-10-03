@@ -58,18 +58,6 @@ public class RSGroundItem extends MethodProvider implements RSTarget {
 	 * Performs the given action on this RSGroundItem.
 	 *
 	 * @param action The menu action to click.
-	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSGroundItem#interact(String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action) {
-		return interact(action);
-	}
-
-	/**
-	 * Performs the given action on this RSGroundItem.
-	 *
-	 * @param action The menu action to click.
 	 * @param option The option of the menu action to click.
 	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
@@ -80,19 +68,6 @@ public class RSGroundItem extends MethodProvider implements RSTarget {
 		}
 		return methods.tiles.interact(getLocation(), random(0.45, 0.55), random(0.45, 0.55), getHeight(),
 				action, option);
-	}
-
-	/**
-	 * Performs the given action on this RSGroundItem.
-	 *
-	 * @param action The menu action to click.
-	 * @param option The option of the menu action to click.
-	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSGroundItem#interact(String, String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action, final String option) {
-		return interact(action, option);
 	}
 
 	public RSItem getItem() {

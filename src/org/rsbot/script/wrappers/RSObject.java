@@ -42,19 +42,6 @@ public class RSObject extends MethodProvider implements RSTarget {
 	/**
 	 * Performs the specified action on this object.
 	 *
-	 * @param action the menu item to search and click
-	 * @return returns true if clicked, false if object does not contain the
-	 *         desired action
-	 * @see org.rsbot.script.wrappers.RSObject#interact(String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action) {
-		return interact(action);
-	}
-
-	/**
-	 * Performs the specified action on this object.
-	 *
 	 * @param action the action of the menu item to search and click
 	 * @param option the option of the menu item to search and click
 	 * @return returns true if clicked, false if object does not contain the
@@ -66,20 +53,6 @@ public class RSObject extends MethodProvider implements RSTarget {
 			return model.interact(action, option);
 		}
 		return methods.tiles.interact(getLocation(), action, option);
-	}
-
-	/**
-	 * Performs the specified action on this object.
-	 *
-	 * @param action the action of the menu item to search and click
-	 * @param option the option of the menu item to search and click
-	 * @return returns true if clicked, false if object does not contain the
-	 *         desired action
-	 * @see org.rsbot.script.wrappers.RSObject#interact(String, String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action, final String option) {
-		return interact(action, option);
 	}
 
 	/**

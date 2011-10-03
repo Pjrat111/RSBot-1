@@ -79,19 +79,6 @@ public class RSComponent extends MethodProvider implements RSTarget {
 	 * showing (valid).
 	 *
 	 * @param action The menu action to click.
-	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSComponent#interact(String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action) {
-		return interact(action);
-	}
-
-	/**
-	 * Performs the given action on this RSInterfaceChild if it is
-	 * showing (valid).
-	 *
-	 * @param action The menu action to click.
 	 * @param option The option of the menu action to click.
 	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
 	 */
@@ -112,20 +99,6 @@ public class RSComponent extends MethodProvider implements RSTarget {
 			sleep(random(40, 80));
 		}
 		return methods.menu.doAction(action, option);
-	}
-
-	/**
-	 * Performs the given action on this RSInterfaceChild if it is
-	 * showing (valid).
-	 *
-	 * @param action The menu action to click.
-	 * @param option The option of the menu action to click.
-	 * @return <tt>true</tt> if the action was clicked; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSComponent#interact(String, String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action, final String option) {
-		return interact(action, option);
 	}
 
 	/**
@@ -356,18 +329,6 @@ public class RSComponent extends MethodProvider implements RSTarget {
 			return inter.getTextureID();
 		}
 		return -1;
-	}
-
-	/**
-	 * Gets the background color of this component
-	 *
-	 * @return the background color or -1 if null
-	 * @see RSComponent#getTextureID()
-	 * @deprecated Invalid name.
-	 */
-	@Deprecated
-	public int getBackgroundColor() {
-		return getTextureID();
 	}
 
 	/**

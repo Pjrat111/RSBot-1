@@ -37,18 +37,6 @@ public abstract class RSCharacter extends MethodProvider implements RSTarget {
 	 * Performs an action on a humanoid character (tall and skinny).
 	 *
 	 * @param action The action of the menu entry to be clicked (if available).
-	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSCharacter#interact(String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action) {
-		return interact(action);
-	}
-
-	/**
-	 * Performs an action on a humanoid character (tall and skinny).
-	 *
-	 * @param action The action of the menu entry to be clicked (if available).
 	 * @param option The option of the menu entry to be clicked (if available).
 	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
 	 */
@@ -76,19 +64,6 @@ public abstract class RSCharacter extends MethodProvider implements RSTarget {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Performs an action on a humanoid character (tall and skinny).
-	 *
-	 * @param action The action of the menu entry to be clicked (if available).
-	 * @param option The option of the menu entry to be clicked (if available).
-	 * @return <tt>true</tt> if the option was found; otherwise <tt>false</tt>.
-	 * @see org.rsbot.script.wrappers.RSCharacter#interact(String, String)
-	 */
-	@Deprecated
-	public boolean doAction(final String action, final String option) {
-		return interact(action, option);
 	}
 
 	public int getAnimation() {

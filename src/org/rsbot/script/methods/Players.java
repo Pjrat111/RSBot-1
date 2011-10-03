@@ -54,7 +54,7 @@ public class Players extends MethodProvider {
 		for (final int index : indices) {
 			if (index != 0 && array[index] != null) {
 				final RSPlayer player = new RSPlayer(methods, array[index]);
-				if (player != null && filter.accept(player)) {
+				if (filter.accept(player)) {
 					players.add(player);
 				}
 			}
@@ -81,7 +81,7 @@ public class Players extends MethodProvider {
 				continue;
 			}
 			final RSPlayer player = new RSPlayer(methods, players[index]);
-			if (player != null && filter.accept(player)) {
+			if (filter.accept(player)) {
 				final int distance = methods.calc.distanceTo(player);
 				if (distance < min) {
 					min = distance;
