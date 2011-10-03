@@ -1,8 +1,8 @@
 package org.rsbot.script.task;
 
-import org.rsbot.script.callback.MouseCallback;
 import org.rsbot.script.methods.MethodContext;
 import org.rsbot.script.methods.Methods;
+import org.rsbot.script.util.Filter;
 import org.rsbot.script.wrappers.RSTarget;
 
 import java.awt.*;
@@ -12,12 +12,12 @@ import java.util.List;
 public class MouseTask extends AbstractTask {
 	private final RSTarget target;
 	private final MethodContext ctx;
-	private final MouseCallback callback;
+	private final Filter<Point> callback;
 	protected final List<ForceModifier> forceModifiers = new ArrayList<ForceModifier>(5);
 	protected final Vector2D velocity = new Vector2D();
 	private boolean running = true;
 
-	public MouseTask(RSTarget target, MouseCallback callback, MethodContext ctx) {
+	public MouseTask(RSTarget target, Filter<Point> callback, MethodContext ctx) {
 		this.target = target;
 		this.callback = callback;
 		this.ctx = ctx;
@@ -35,7 +35,9 @@ public class MouseTask extends AbstractTask {
 				continue;
 			}
 
-			if (target.contains(ctx.client.getMouse().getX(), ctx.client.getMouse().getY()) && callback.performAction()) {
+			final Point mLoc = new Point(ctx.client.getMouse().getX(), ctx.client.getMouse().getY());
+
+			if (target.contains(mLoc.x, mLoc.y) && callback.accept(mLoc)) {
 				break;
 			}
 			double deltaTime = Methods.random(8D, 10D) / 1000D;

@@ -11,14 +11,13 @@ import java.util.*;
 
 public class EventMulticaster implements EventListener {
 	public static final long FOCUS_EVENT = 0x10;
-	public static final long KEY_EVENT = 0x08;
+	public static final long KEY_EVENT = 0x8;
 
 	public static final long MOUSE_EVENT = 0x01;
 	public static final long MOUSE_MOTION_EVENT = 0x02;
 	public static final long MOUSE_WHEEL_EVENT = 0x04;
 
 	public static final long CHARACTER_MOVED_EVENT = 0x400;
-	public static final long SERVER_MESSAGE_EVENT = 0x600;
 	public static final long MESSAGE_EVENT = 0x800;
 	public static final long PAINT_EVENT = 0x1000;
 	public static final long TEXT_PAINT_EVENT = 0x2000;
