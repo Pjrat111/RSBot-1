@@ -422,7 +422,6 @@ public class Web extends MethodProvider {
 			final Thread t = new Thread(ScriptHandler.THREAD_GROUP, webData, ScriptHandler.THREAD_GROUP_NAME + "-Web Data handler");
 			t.setPriority(Thread.MIN_PRIORITY);
 			t.setDaemon(true);
-			t.setName("Web data handler");
 			t.start();
 			webScriptsLoaded = true;
 		}
