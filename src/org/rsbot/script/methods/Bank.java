@@ -8,14 +8,20 @@ import java.awt.*;
  * Bank related operations.
  */
 public class Bank extends MethodProvider {
-	public static final int[] BANKERS = new int[]{44, 45, 496, 497, 494, 495, 498, 499, 909, 958, 1036, 2271, 2354, 2355, 2718, 3293, 3416, 3218, 3824,
-			5488, 5901, 4456, 4457, 4458, 4459, 5912, 5913, 6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
-	public static final int[] BANK_BOOTHS = new int[]{782, 2213, 2995, 5276, 6084, 10517, 11402, 11758, 12759, 14367,
-			19230, 20325, 24914, 25808, 26972, 29085, 52589, 34752, 35647, 36786, 2012, 2015, 2019, 42377, 42217, 42378};
-	public static final int[] BANK_CHESTS = new int[]{693, 4483, 12308, 20607, 21301, 27663, 42192};
-	public static final int[] DEPOSIT_BOXES = {2045, 9398, 20228, 24995, 25937, 26969, 32924, 32930, 32931, 34755,
-			36788, 39830, 45079};
-	public static final int[] DO_NOT_DEPOSIT = new int[]{1265, 1267, 1269, 1273, 1271, 1275, 1351, 590, 303};
+	public static final int[] BANKERS = new int[]{44, 45, 494, 495, 496, 497,
+			498, 499, 553, 909, 958, 1036, 2271, 2354, 2355, 2718, 2759, 3198,
+			3293, 3416, 3418, 3824, 4456, 4457, 4458, 4459, 5488, 5901, 5912,
+			6362, 6532, 6533, 6534, 6535, 7605, 8948, 9710, 14367};
+	public static final int[] BANK_BOOTHS = new int[]{782, 2213, 2995, 5276,
+			6084, 10517, 11402, 11758, 12759, 14367, 19230, 20325, 24914, 11338,
+			25808, 26972, 29085, 52589, 34752, 35647, 36786, 2012, 2015, 2019,
+			42217, 42377, 42378};
+	public static final int[] BANK_CHESTS = new int[]{4483, 12308, 20607,
+			21301, 27663, 42192};
+	public static final int[] DEPOSIT_BOXES = {2045, 9398, 20228, 24995, 25937,
+			26969, 32924, 32930, 32931, 34755, 36788, 39830, 45079};
+	public static final int[] DO_NOT_DEPOSIT = new int[]{1265, 1267, 1269,
+			1273, 1271, 1275, 1351, 590, 303};
 
 
 	public static final int INTERFACE_BANK = 762;
@@ -385,90 +391,89 @@ public class Bank extends MethodProvider {
 	 *
 	 * @return <tt>true</tt> if the bank was opened; otherwise <tt>false</tt>.
 	 */
-	 
-	 public boolean open() {
-	 	if (isOpen()) {
-	 		return true;
-	 	}
-	 	try {
-	 		if (methods.menu.isOpen()) {
-	 			methods.mouse.moveRandomly(450);
-	 			sleep(random(40,80));
-	 		}
-                    Object[] banks = {methods.objects.getNearest(Bank.BANK_CHESTS), methods.objects.getNearest(Bank.BANK_BOOTHS), methods.npcs.getNearest(Bank.BANKERS)};
-                    int[] dis = {methods.calc.distanceTo((RSObject) banks[0]), methods.calc.distanceTo((RSObject) banks[1]), methods.calc.distanceTo((RSNPC) banks[2])};
-                    String[][] actions = {{"Open", "Use"}, {"Use-quickly"}, {"Bank"}};
-                    RSObject object = (RSObject) banks[1];
-                    RSNPC npc = (RSNPC) banks[2];
-                    String[] action = npc != null ? actions[2] : object != null ? actions[1] : null;
-                    /** find closest */
-                    if (object != null && npc != null) {
-                        if (dis[1] < dis[2]) {
-                            object = (RSObject) banks[1];
-                            action = actions[1];
-                            npc = null;
-                        } else {
-                            npc = (RSNPC) banks[2];
-                            action = actions[2];
-                            object = null;
-                        }
-                    }
-                    if (object == null && npc == null) {
-                        object = (RSObject) banks[0];
-                        action = actions[0];
-                    }
-                    RSTile tile = object == null ? npc == null ? null : npc.getLocation() : object.getLocation();
-                    String finalAction = null;
-                    boolean didAction = false;
-                    if (object != null && methods.calc.distanceTo(object) < 5) {
-                        methods.mouse.move(object.getPoint());
-                        RSObjectDef def = object.getDef();
-                        if (def != null) {
-                            outer:
-                        for (String s : action) {
-                            for (String i : def.getActions()) { // find correct action; instead of trying all.
-                                if (i != null && i.contains(s)) {
-                                    finalAction = s;
-                                    break outer;
-                                }
-                            }
-                        }
-                        didAction = finalAction != null ? object.interact(finalAction + " " + object.getName()) : false;
-                        } else {
-                            for (int i = 0; i < action.length && !didAction; i++) {
-                                didAction = object.interact(action[i] + " " + object.getName());
-                            }
-                        }
-                    } else if (npc != null && methods.calc.distanceTo(npc.getLocation()) < 5) {
-                        methods.mouse.move(npc.getPoint());
-                        outer:
-                            for (String s : action) {
-                                for (String i : npc.getActions()) {
-                                    if (i != null && i.contains(s)) { // finding correct action
-                                        finalAction = s;
-                                        break outer;
-                                    }
-                                }
-                            }
-                            didAction = npc.interact(finalAction + " " + npc.getName());
-                    } else if (tile != null) {
-                        methods.walking.walkTileMM(tile);
-                    }
-                    if (didAction) {
-                        int count = 0;
-                        while (!isOpen() && ++count < 10) {
-                            sleep(random(100,200));
-                            if (methods.players.getMyPlayer().isMoving()) {
-                                count = 0;
-                            }
-                        }
-                    }
-                    return isOpen();
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-        }
+	public boolean open() {
+		if (isOpen()) {
+			return true;
+		}
+		try {
+			if (methods.menu.isOpen()) {
+				methods.mouse.moveRandomly(450);
+				sleep(random(40, 80));
+			}
+			Object[] banks = {methods.objects.getNearest(Bank.BANK_CHESTS), methods.objects.getNearest(Bank.BANK_BOOTHS), methods.npcs.getNearest(Bank.BANKERS)};
+			int[] dis = {methods.calc.distanceTo((RSObject) banks[0]), methods.calc.distanceTo((RSObject) banks[1]), methods.calc.distanceTo((RSNPC) banks[2])};
+			String[][] actions = {{"Open", "Use"}, {"Use-quickly"}, {"Bank"}};
+			RSObject object = (RSObject) banks[1];
+			RSNPC npc = (RSNPC) banks[2];
+			String[] action = npc != null ? actions[2] : object != null ? actions[1] : null;
+			/** find closest */
+			if (object != null && npc != null) {
+				if (dis[1] < dis[2]) {
+					object = (RSObject) banks[1];
+					action = actions[1];
+					npc = null;
+				} else {
+					npc = (RSNPC) banks[2];
+					action = actions[2];
+					object = null;
+				}
+			}
+			if (object == null && npc == null) {
+				object = (RSObject) banks[0];
+				action = actions[0];
+			}
+			RSTile tile = object == null ? npc == null ? null : npc.getLocation() : object.getLocation();
+			String finalAction = null;
+			boolean didAction = false;
+			if (object != null && methods.calc.distanceTo(object) < 5) {
+				methods.mouse.move(object.getPoint());
+				RSObjectDef def = object.getDef();
+				if (def != null) {
+					outer:
+					for (String s : action) {
+						for (String i : def.getActions()) { // find correct action; instead of trying all.
+							if (i != null && i.contains(s)) {
+								finalAction = s;
+								break outer;
+							}
+						}
+					}
+					didAction = finalAction != null && object.interact(finalAction + " " + object.getName());
+				} else {
+					for (int i = 0; i < action.length && !didAction; i++) {
+						didAction = object.interact(action[i] + " " + object.getName());
+					}
+				}
+			} else if (npc != null && methods.calc.distanceTo(npc.getLocation()) < 5) {
+				methods.mouse.move(npc.getPoint());
+				outer:
+				for (String s : action) {
+					for (String i : npc.getActions()) {
+						if (i != null && i.contains(s)) { // finding correct action
+							finalAction = s;
+							break outer;
+						}
+					}
+				}
+				didAction = npc.interact(finalAction + " " + npc.getName());
+			} else if (tile != null) {
+				methods.walking.walkTileMM(tile);
+			}
+			if (didAction) {
+				int count = 0;
+				while (!isOpen() && ++count < 10) {
+					sleep(random(100, 200));
+					if (methods.players.getMyPlayer().isMoving()) {
+						count = 0;
+					}
+				}
+			}
+			return isOpen();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * Opens one of the supported deposit boxes nearby. If they are not nearby, and they are not null,
