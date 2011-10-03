@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class ScriptUserList implements Runnable {
@@ -78,9 +79,7 @@ public final class ScriptUserList implements Runnable {
 		list = new ArrayList<String>(8);
 		final String text = IOHelper.readString(cache);
 		final String[] items = text.split("\n");
-		for (final String item : items) {
-			list.add(item);
-		}
+		Collections.addAll(list, items);
 	}
 
 	public boolean isListed(final ScriptDefinition item) {

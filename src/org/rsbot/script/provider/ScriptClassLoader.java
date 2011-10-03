@@ -16,8 +16,6 @@ import java.security.Permissions;
 import java.security.ProtectionDomain;
 import java.util.PropertyPermission;
 
-/**
- */
 class ScriptClassLoader extends ClassLoader {
 	private final ProtectionDomain domain;
 	private final URL base;
@@ -44,10 +42,8 @@ class ScriptClassLoader extends ClassLoader {
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
 	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 		Class clazz = findLoadedClass(name);
-
 		if (clazz == null) {
 			try {
 				final InputStream in = getResourceAsStream(name.replace('.', '/') + ".class");
@@ -60,7 +56,6 @@ class ScriptClassLoader extends ClassLoader {
 				clazz = super.loadClass(name, resolve);
 			}
 		}
-
 		return clazz;
 	}
 

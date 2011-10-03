@@ -124,7 +124,6 @@ public class ScriptDeliveryNetwork implements ScriptSource, Runnable {
 		return null;
 	}
 
-	@Override
 	public void run() {
 		refresh(true);
 	}

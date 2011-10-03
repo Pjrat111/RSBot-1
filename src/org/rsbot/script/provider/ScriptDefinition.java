@@ -5,12 +5,10 @@ import org.rsbot.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @author Paris
  */
 public class ScriptDefinition implements Comparable<ScriptDefinition> {
-
 	public String getName() {
 		String txt = StringUtil.stripHtml(name);
 		txt = txt.replaceFirst("\\b[Vv]\\d+(?:\\.\\d+)?", "");

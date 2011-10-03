@@ -72,7 +72,11 @@ public class FileScriptSource implements ScriptSource {
 	}
 
 	public static Script load(final FileScriptDefinition def) throws InstantiationException, IllegalAccessException {
-		return def.clazz.asSubclass(Script.class).newInstance();
+		if (Script.class.isAssignableFrom(def.clazz)) {
+			return def.clazz.asSubclass(Script.class).newInstance();
+		}
+		log.severe("Invalid script passed to loader");
+		throw new InstantiationException("invalid script passed to loader");
 	}
 
 	public static void load(final File file, final LinkedList<ScriptDefinition> defs, ClassLoader loader) throws IOException {
@@ -155,5 +159,4 @@ public class FileScriptSource implements ScriptSource {
 	public static class FileScriptDefinition extends ScriptDefinition {
 		Class<?> clazz;
 	}
-
 }
