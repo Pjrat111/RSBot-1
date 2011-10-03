@@ -1,5 +1,6 @@
 package org.rsbot.script.methods;
 
+import org.rsbot.script.util.Timer;
 import org.rsbot.script.wrappers.RSCharacter;
 import org.rsbot.script.wrappers.RSComponent;
 import org.rsbot.script.wrappers.RSNPC;
@@ -95,7 +96,7 @@ public class Combat extends MethodProvider {
 	}
 
 	/**
-	 * Gets the current Wilderness Level. Written by Speed.
+	 * Gets the current Wilderness Level.
 	 *
 	 * @return The current wilderness level otherwise, 0.
 	 */
@@ -156,26 +157,23 @@ public class Combat extends MethodProvider {
 	}
 
 	/**
-	 * Sets the attack mode.
+	 * Attempts to set the combat style to the desired index.
 	 *
-	 * @param fightMode The fight mode to set it to. From 0-3 corresponding to the 4
-	 *                  attacking modes; Else if there is only 3 attacking modes then,
-	 *                  from 0-2 corresponding to the 3 attacking modes
-	 * @return <tt>true</tt> if the interface was clicked; otherwise
-	 *         <tt>false</tt>.
-	 * @see #getFightMode()
+	 * @param styleIndex The style to attempt to set.
+	 * @return <tt>true</tt> if it was set; otherwise <tt>false</tt>.
 	 */
-	public boolean setFightMode(final int fightMode) {
-		if (fightMode != getFightMode()) {
-			methods.game.openTab(Game.Tab.ATTACK);
-			if (fightMode == 0) {
-				return methods.interfaces.getComponent(884, 11).doClick();
-			} else if (fightMode == 1) {
-				return methods.interfaces.getComponent(884, 12).doClick();
-			} else if (fightMode == 2 || fightMode == 3 && methods.interfaces.getComponent(884, 14).getActions() == null) {
-				return methods.interfaces.getComponent(884, 13).doClick();
-			} else if (fightMode == 3) {
-				return methods.interfaces.getComponent(884, 14).doClick();
+	public boolean setFightMode(final int styleIndex) {
+		if (styleIndex == getFightMode()) {
+			return true;
+		}
+		if (methods.game.openTab(Game.Tab.ATTACK)) {
+			final RSComponent button = methods.interfaces.getComponent(884, styleIndex + 11);
+			if (button != null && button.doClick(true)) {
+				final Timer timer = new Timer(800);
+				while (timer.isRunning() && getFightMode() != styleIndex) {
+					sleep(50);
+				}
+				return getFightMode() == styleIndex;
 			}
 		}
 		return false;
