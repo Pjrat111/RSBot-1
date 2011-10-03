@@ -3,12 +3,10 @@ package org.rsbot.util.io;
 import org.rsbot.Configuration;
 import org.rsbot.Configuration.OperatingSystem;
 
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
-import java.io.*;
+import javax.tools.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 
@@ -25,7 +23,6 @@ public class JavaCompiler implements Callable<Boolean> {
 		this.classPath = classPath;
 	}
 
-	@Override
 	public Boolean call() {
 		try {
 			return compileNative() || compileSystem();
@@ -35,7 +32,7 @@ public class JavaCompiler implements Callable<Boolean> {
 	}
 
 	public static boolean isAvailable() {
-		return !(ToolProvider.getSystemJavaCompiler() == null && findJavac() == null);
+		return ToolProvider.getSystemJavaCompiler() != null || findJavac() != null;
 	}
 
 	private boolean compileNative() {
@@ -45,9 +42,9 @@ public class JavaCompiler implements Callable<Boolean> {
 		}
 		final DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<JavaFileObject>();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnosticsCollector, null, null);
-		Iterable<? extends JavaFileObject> fileObjects = fileManager.getJavaFileObjects(new File[] { source });
+		Iterable<? extends JavaFileObject> fileObjects = fileManager.getJavaFileObjects(source);
 		try {
-			fileManager.setLocation(StandardLocation.CLASS_PATH, Arrays.asList(new File[] { new File(classPath) }));
+			fileManager.setLocation(StandardLocation.CLASS_PATH, Arrays.asList(new File(classPath)));
 		} catch (final IOException ignored) {
 		}
 		return compiler.getTask(null, fileManager, diagnosticsCollector, null, null, fileObjects).call();
