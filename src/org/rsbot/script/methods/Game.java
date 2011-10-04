@@ -814,9 +814,9 @@ public class Game extends MethodProvider {
 	 */
 	public Language getWorldLanguage() {
 		final Map<Language, int[]> map = new HashMap<Language, int[]>(3);
-		map.put(Language.GERMAN, GERMAN_WORLDS);
-		map.put(Language.FRENCH, FRENCH_WORLDS);
-		map.put(Language.PORTUGUESE, PORTUGUESE_WORLDS);
+		map.put(Language.GERMAN, WORLDS_GERMAN);
+		map.put(Language.FRENCH, WORLDS_FRENCH);
+		map.put(Language.PORTUGUESE, WORLDS_PORTUGUESE);
 		final int w = getCurrentWorld();
 		for (final Entry<Language, int[]> entry : map.entrySet()) {
 			for (int i = 0; i < entry.getValue().length; i++) {
@@ -835,7 +835,7 @@ public class Game extends MethodProvider {
 	 */
 	public boolean isWorldMembers() {
 		final int w = getCurrentWorld();
-		for (final int n : MEMBER_WORLDS) {
+		for (final int n : WORLDS_MEMBER) {
 			if (w == n) {
 				return true;
 			}

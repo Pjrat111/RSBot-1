@@ -43,7 +43,7 @@ class ScriptClassLoader extends ClassLoader {
 
 	@Override
 	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
-		Class clazz = findLoadedClass(name);
+		Class<?> clazz = findLoadedClass(name);
 		if (clazz == null) {
 			try {
 				final InputStream in = getResourceAsStream(name.replace('.', '/') + ".class");
