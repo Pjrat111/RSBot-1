@@ -195,13 +195,13 @@ public class Walking extends MethodProvider {
 	public boolean rest(final int stopEnergy) {
 		int energy = getEnergy();
 		for (int d = 0; d < 5; d++) {
+			final int anim = methods.players.getMyPlayer().getAnimation();
 			if (anim == 12108 || anim == 2033 || anim == 2716 || anim == 11786 || anim == 5713) {
 				methods.mouse.moveSlightly();
 				break;
 			}
 			methods.interfaces.getComponent(INTERFACE_RUN_ORB, 6).interact("Rest");
 			sleep(random(500, 700));
-			final int anim = methods.players.getMyPlayer().getAnimation();
 			if (d == 4) {
 				return false;
 			}
