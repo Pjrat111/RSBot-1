@@ -725,7 +725,7 @@ public class Game extends MethodProvider {
 			}
 		}
 		mouseChatButton(option, false);
-		return methods.menu.doAction(mode.toString());
+		return methods.menu.click(mode.toString());
 	}
 
 	/**

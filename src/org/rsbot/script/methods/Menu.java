@@ -38,8 +38,8 @@ public class Menu extends MethodProvider {
 	 * @return <tt>true</tt> if the menu item was clicked; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(final String action) {
-		return doAction(action, null);
+	public boolean click(final String action) {
+		return click(action, null);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class Menu extends MethodProvider {
 	 * @return <tt>true</tt> if the menu item was clicked; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean doAction(final String action, final String option) {
+	public boolean click(final String action, final String option) {
 		final int idx = getIndex(action, option);
 		if (!isOpen()) {
 			if (idx == -1) {

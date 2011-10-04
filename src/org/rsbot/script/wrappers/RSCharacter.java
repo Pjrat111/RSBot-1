@@ -54,7 +54,7 @@ public abstract class RSCharacter extends MethodProvider implements RSTarget {
 						break;
 					}
 					if (!methods.mouse.getLocation().equals(screenLoc) &&
-							methods.menu.doAction(action, option)) {
+							methods.menu.click(action, option)) {
 						return true;
 					}
 					methods.mouse.move(screenLoc);

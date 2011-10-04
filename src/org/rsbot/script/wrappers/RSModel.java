@@ -157,7 +157,7 @@ public abstract class RSModel extends MethodProvider implements RSTarget {
 			if (!contains(methods.mouse.getLocation())) {
 				methods.mouse.move(point);
 			}
-			return methods.menu.doAction(action, option);
+			return methods.menu.click(action, option);
 		} catch (Exception e) {
 			return false;
 		}

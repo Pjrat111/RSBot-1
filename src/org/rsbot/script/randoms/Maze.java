@@ -384,7 +384,7 @@ public class Maze extends Random {
 						(mouse.getLocation().getY() - location.getY()), 2)) < random(20, 30)) {
 					for (final String command : menu.getItems()) {
 						if (command.contains("Open")) {
-							if (menu.doAction("Open")) {
+							if (menu.click("Open")) {
 								lastTry = 0;
 								tryCount = 0;
 								return true;
@@ -393,7 +393,7 @@ public class Maze extends Random {
 					}
 				}
 				mouse.move(location, 7, 7);
-				if (menu.doAction("Open")) {
+				if (menu.click("Open")) {
 					lastTry = 0;
 					tryCount = 0;
 					return true;

@@ -163,12 +163,12 @@ public class Interfaces extends MethodProvider {
 		final Rectangle actual = new Rectangle(minX, minY, width, height);
 		// Check if the menu already contains the action otherwise reposition
 		// before clicking
-		if (actual.contains(methods.mouse.getLocation()) && methods.menu.contains(action) && methods.menu.doAction(action)) {
+		if (actual.contains(methods.mouse.getLocation()) && methods.menu.contains(action) && methods.menu.click(action)) {
 			return true;
 		}
 		methods.mouse.move(random(minX, minX + width),
 				random(minY, minY + height));
-		return methods.menu.doAction(action);
+		return methods.menu.click(action);
 	}
 
 	/**

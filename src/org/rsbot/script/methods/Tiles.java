@@ -50,7 +50,7 @@ public class Tiles extends MethodProvider {
 		if (location.x != -1 && location.y != -1) {
 			methods.mouse.move(location, 3, 3);
 			sleep(random(20, 100));
-			return methods.menu.doAction(action, option);
+			return methods.menu.click(action, option);
 		}
 		return false;
 	}
@@ -91,7 +91,7 @@ public class Tiles extends MethodProvider {
 		}
 		try {
 			methods.mouse.move(point, 5, 5);
-			return methods.menu.doAction(action, option);
+			return methods.menu.click(action, option);
 		} catch (Exception e) {
 			return false;
 		}

@@ -98,7 +98,7 @@ public class RSComponent extends MethodProvider implements RSTarget {
 					random(min_y, max_y, rect.height / 3));
 			sleep(random(40, 80));
 		}
-		return methods.menu.doAction(action, option);
+		return methods.menu.click(action, option);
 	}
 
 	/**
