@@ -166,7 +166,15 @@ public class RewardsBox extends Random {
         switch (getState()) {
             case OPEN_RANDOM:
                 RSItem item = inventory.getItem(Values.ACTIVATION_ITEMS);
-                return item != null && item.doClick(true) ? random(3000, 3500) : 10;
+                if (item != null && item.doClick(true)) {
+                	for (int i = 0; i < 35; i++) {
+                		if (interfaces.get(Values.INTERFACE_MAIN_BOX).isValid() || interfaces.get(Values.INTERFACE_XP_SELECTION).isValid()) {
+                			break;
+                		}
+                		sleep(100);
+                	}
+                }
+                return 100;
             case HANDLE_BOX:
                 if (SELECTED_REWARD == null) {
                     return 100;

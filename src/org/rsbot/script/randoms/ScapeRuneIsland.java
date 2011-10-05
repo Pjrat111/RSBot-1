@@ -223,11 +223,11 @@ public class ScapeRuneIsland extends Random {
 
 	public boolean useItem(final RSItem item, final RSObject targetObject) {
 		game.openTab(Game.Tab.INVENTORY);
-		return inventory.selectItem(item) && targetObject.interact("Use " + item.getName());
+		return inventory.selectItem(item) && targetObject.interact("Use " + item.getName() + " -> " + targetObject.getName());
 	}
 
-	public boolean useItem(final RSItem item, final RSNPC targetObject) {
+	public boolean useItem(final RSItem item, final RSNPC targetNPC) {
 		game.openTab(Game.Tab.INVENTORY);
-		return inventory.selectItem(item) && targetObject.interact("Use " + item.getName());
+		return inventory.selectItem(item) && targetNPC.interact("Use " + item.getName() + " -> " + targetNPC.getName());
 	}
 }
