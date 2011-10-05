@@ -194,13 +194,13 @@ public class Camera extends MethodProvider {
 	public void setAngle(final int degrees) {
 		if (getAngleTo(degrees) > 5) {
 			methods.inputManager.pressKey((char) KeyEvent.VK_LEFT);
-			while (getAngleTo(degrees) > 5) {
+			while (getAngleTo(degrees) > 5  && methods.game.getClientState() == 11) {
 				sleep(10);
 			}
 			methods.inputManager.releaseKey((char) KeyEvent.VK_LEFT);
 		} else if (getAngleTo(degrees) < -5) {
 			methods.inputManager.pressKey((char) KeyEvent.VK_RIGHT);
-			while (getAngleTo(degrees) < -5) {
+			while (getAngleTo(degrees) < -5  && methods.game.getClientState() == 11) {
 				sleep(10);
 			}
 			methods.inputManager.releaseKey((char) KeyEvent.VK_RIGHT);
