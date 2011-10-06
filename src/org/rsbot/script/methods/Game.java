@@ -552,7 +552,7 @@ public class Game extends MethodProvider {
 		}
 		if (getTab() != Tab.LOGOUT) {
 			final int idx = methods.client.getGUIRSInterfaceIndex();
-			RSComponent exitComponent = methods.interfaces.getComponent(idx, isFixed() ? 181 : 173);
+			RSComponent exitComponent = methods.interfaces.getComponent(idx, isFixed() ? 182 : 176);
 			if (exitComponent == null || !exitComponent.doClick()) {
 				return false;
 			}
