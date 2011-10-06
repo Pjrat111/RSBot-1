@@ -51,22 +51,15 @@ public class ScreenshotUtil {
 	public static BufferedImage takeScreenshot(final Bot bot, final boolean hideUsername) {
 		final BufferedImage source = bot.getImage();
 		final WritableRaster raster = source.copyData(null);
-
 		final BufferedImage bufferedImage = new BufferedImage(source.getColorModel(), raster,
 				source.isAlphaPremultiplied(), null);
-		final Graphics2D graphics = bufferedImage.createGraphics();
 
 		if (hideUsername) {
-			if (bot.getMethodContext().game.isFixed()) {
-				graphics.setColor(Color.black);
-				graphics.fill(new Rectangle(9, 459, 100, 15));
-				graphics.dispose();
-			} else {
-				graphics.setColor(Color.black);
-				graphics.drawRect(8, 555, 100, 15);
-				graphics.dispose();
-			}
+			final Graphics graphics = bufferedImage.createGraphics();
+			graphics.setColor(Color.black);
+			graphics.fillRect(9, 457, 100, 15);
+			graphics.dispose();
 		}
-		return source;
+		return bufferedImage;
 	}
 }
