@@ -126,7 +126,7 @@ public class ImprovedLoginBot extends Random {
 					return event.sleep;
 				}
 			}
-			if (account.getName().equalsIgnoreCase("Facebook")) {
+			if (account.getName().equalsIgnoreCase(AccountStore.FACEBOOK_ACCOUNT.getUsername())) {
 				return interfaces.getComponent(INTERFACE_LOGIN_SCREEN, INTERFACE_LOGIN_SCREEN_FACEBOOK).doClick() ? 500 : 0;
 			}
 			if (isUsernameCorrect() && isPasswordValid()) {

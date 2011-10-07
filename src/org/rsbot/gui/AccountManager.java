@@ -3,6 +3,7 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.script.AccountStore;
+import org.rsbot.script.AccountStore.Account;
 import org.rsbot.script.randoms.ImprovedLoginBot;
 import org.rsbot.security.UniqueID;
 
@@ -18,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -227,7 +227,7 @@ public class AccountManager extends JDialog implements ActionListener {
 			} else if (button.getToolTipText().equals("Remove")) {
 				final int row = table.getSelectedRow();
 				final String user = ((AccountTableModel) table.getModel()).userForRow(row);
-				if (user != null && !user.equalsIgnoreCase(AccountStore.FACEBOOK_ACCOUNT.getUsername())) {
+				if (user != null) {
 					accountStore.remove(user);
 					((AccountTableModel) table.getModel()).fireTableRowsDeleted(row, row);
 				}
@@ -292,17 +292,13 @@ public class AccountManager extends JDialog implements ActionListener {
 	 */
 	public static String[] getAccountNames() {
 		assertLoginBot();
-		try {
-			final List<String> theList = new ArrayList<String>();
-			final Collection<AccountStore.Account> accountCollection = AccountManager.accountStore.list();
-			for (final AccountStore.Account anAccountCollection : accountCollection) {
-				theList.add(anAccountCollection.getUsername());
-			}
-			return theList.toArray(new String[theList.size()]);
-		} catch (final Exception e) {
-			e.printStackTrace();
+		final List<String> list = new ArrayList<String>();
+		for (final Account account : accountStore.list()) {
+			list.add(account.getUsername());
 		}
-		return null;
+		final String[] names = new String[list.size()];
+		list.toArray(names);
+		return names;
 	}
 
 	public static AccountManager getInstance() {

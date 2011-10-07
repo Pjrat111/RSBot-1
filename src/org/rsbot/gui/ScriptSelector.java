@@ -3,6 +3,7 @@ package org.rsbot.gui;
 import org.rsbot.Configuration;
 import org.rsbot.bot.Bot;
 import org.rsbot.gui.component.Messages;
+import org.rsbot.script.AccountStore;
 import org.rsbot.script.Script;
 import org.rsbot.script.internal.ScriptHandler;
 import org.rsbot.script.internal.event.ScriptListener;
@@ -18,11 +19,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
-import org.rsbot.script.AccountStore;
 
 /**
  * @author Paris
@@ -46,15 +45,11 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	private final List<ScriptDefinition> scripts;
 	private JButton submit, connect, local;
 	public static boolean connectPrompted = false;
-        public static ArrayList<String> ACCOUNT_NAME = new ArrayList<String>();
+
 	static {
 		SRC_SOURCES = new FileScriptSource(new File(Configuration.Paths.getScriptsSourcesDirectory()));
 		SRC_PRE_COMPILED = new FileScriptSource(new File(Configuration.Paths.getScriptsPrecompiledDirectory()));
 		SRC_NETWORK = ScriptDeliveryNetwork.getInstance();
-                ACCOUNT_NAME.addAll(Arrays.asList(AccountManager.getAccountNames()));
-                if(ACCOUNT_NAME.contains(AccountStore.FACEBOOK_ACCOUNT.getUsername())){
-                    ACCOUNT_NAME.remove(AccountStore.FACEBOOK_ACCOUNT.getUsername());
-                }
 	}
 
 	public ScriptSelector(final Chrome frame, final Bot bot) {
@@ -80,17 +75,15 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	void update() {
-            updateAccounts();
 		final boolean available = bot.getScriptHandler().getRunningScripts().isEmpty();
 		submit.setEnabled(available && table.getSelectedRow() != -1);
 		table.setEnabled(available);
 		search.setEnabled(available);
-		accounts.setEnabled(available && !ACCOUNT_NAME.isEmpty() && !Preferences.getInstance().fbconnect);
+		accounts.setEnabled(available);
 		table.clearSelection();
 	}
 
 	private void load() {
-            updateAccounts();
 		scripts.clear();
 		scripts.addAll(SRC_PRE_COMPILED.list());
 		scripts.addAll(SRC_SOURCES.list());
@@ -106,7 +99,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 	}
 
 	private void init() {
-            updateAccounts();
 		setIconImage(Configuration.getImage(Configuration.Paths.Resources.ICON_SCRIPT));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -121,18 +113,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		});
 		connect = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_DISCONNECT)));
 		connect.setFocusable(false);
-		final JToggleButton fbconnect = new JToggleButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_FACEBOOK)));
-		fbconnect.setFocusable(false);
-		fbconnect.setToolTipText("Log in with Facebook");
-		fbconnect.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				accounts.setEnabled(!fbconnect.isSelected() && !ACCOUNT_NAME.isEmpty());
-				if (ACCOUNT_NAME.isEmpty()) {
-					fbconnect.setSelected(true);
-				}
-			}
-		});
-		fbconnect.setSelected(Preferences.getInstance().fbconnect);
 		final JButton refresh = new JButton(new ImageIcon(Configuration.getImage(Configuration.Paths.Resources.ICON_REFRESH)));
 		refresh.setToolTipText("Refresh");
 		refresh.setFocusable(false);
@@ -302,8 +282,6 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			public void actionPerformed(final ActionEvent evt) {
 				final ScriptDefinition def = model.getDefinition(table.getSelectedRow());
 				setVisible(false);
-                                Preferences.getInstance().fbconnect = fbconnect.isSelected();
-				final String account = fbconnect.isSelected() ? "Facebook" : (String) accounts.getSelectedItem();
 				bot.getScriptHandler().removeScriptListener(ScriptSelector.this);
 				dispose();
 				Script script = null;
@@ -313,7 +291,7 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 					log.severe(e.getMessage());
 				}
 				if (script != null) {
-					bot.setAccount(account);
+					bot.setAccount((String) accounts.getSelectedItem());
 					bot.getScriptHandler().runScript(script);
 					frame.updateScriptControls();
 				}
@@ -337,8 +315,9 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			}
 		});
 		connectUpdate();
-		accounts = new JComboBox(ACCOUNT_NAME.toArray(new String[ACCOUNT_NAME.size()]));
-                accounts.setEnabled(!ACCOUNT_NAME.isEmpty() && !Preferences.getInstance().fbconnect);
+		accounts = new JComboBox(AccountManager.getAccountNames());
+		accounts.insertItemAt(AccountStore.FACEBOOK_ACCOUNT.getUsername(), 0);
+		accounts.setEnabled(accounts.getItemCount() > 1);
 		accounts.setFocusable(accounts.getItemCount() > 1);
 		categories = new JComboBox(new String[]{"All", "Agility", "Combat", "Construction", "Cooking", "Crafting", "Dungeoneering", "Farming",
 				"Firemaking", "Fishing", "Fletching", "Herblore", "Hunter", "Magic", "Minigame", "Mining", "Other", "Money Making", "Prayer",
@@ -368,14 +347,8 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(categories);
 		toolBar.add(Box.createHorizontalStrut(5));
-                toolBar.addSeparator();
-                toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(accounts);
 		toolBar.add(Box.createHorizontalStrut(5));
-                toolBar.add(fbconnect);
-                toolBar.add(Box.createHorizontalStrut(5));
-                toolBar.addSeparator();
-                toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(local);
 		toolBar.add(Box.createHorizontalStrut(5));
 		toolBar.add(connect);
@@ -536,12 +509,4 @@ public class ScriptSelector extends JDialog implements ScriptListener {
 			return COLUMN_NAMES[col];
 		}
 	}
-
-        private void updateAccounts(){
-            ACCOUNT_NAME.clear();
-            ACCOUNT_NAME.addAll(Arrays.asList(AccountManager.getAccountNames()));
-            if(ACCOUNT_NAME.contains(AccountStore.FACEBOOK_ACCOUNT.getUsername())){
-                ACCOUNT_NAME.remove(AccountStore.FACEBOOK_ACCOUNT.getUsername());
-            }
-        }
 }

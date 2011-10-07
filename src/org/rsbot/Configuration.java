@@ -65,7 +65,6 @@ public class Configuration {
 			public static final String ICON_SCRIPT_EDIT = ROOT_IMG + "/script_edit.png";
 			public static final String ICON_WEBLINK = ROOT_IMG + "/world_link.png";
 			public static final String ICON_LICENSE = ROOT_IMG + "/page_white_text.png";
-			public static final String ICON_FACEBOOK = ROOT_IMG + "/facebook.png";
                         
 			public static final String VERSION = ROOT + "/version.txt";
 		}

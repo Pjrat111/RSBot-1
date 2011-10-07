@@ -348,12 +348,12 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 	}
 
 	private void showScriptSelector(final Bot bot) {
-		if (AccountManager.getAccountNames() == null || AccountManager.getAccountNames().length == 1) {
-			log.warning("No accounts found, you'll be able to connect with facebook only.");
-		}
 		if (bot.getMethodContext() == null) {
 			log.warning("The client is still loading");
-		} else if (AccountManager.getAccountNames() != null && AccountManager.getAccountNames().length != 0) {
+		} else {
+			if (AccountManager.getAccountNames().length == 0) {
+				log.warning("No accounts saved, Facebook connect will be used");
+			}
 			new ScriptSelector(this, bot).showGUI();
 		}
 	}
