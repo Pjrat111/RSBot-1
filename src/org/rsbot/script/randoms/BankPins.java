@@ -8,7 +8,7 @@ public class BankPins extends Random {
 
 	@Override
 	public boolean activateCondition() {
-		return interfaces.get(13).isValid() || (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, I really want a Bank PIN"));
+		return interfaces.get(13).isValid() || (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, "));
 	}
 
 	void enterPin(String pin) {
@@ -25,7 +25,7 @@ public class BankPins extends Random {
 
 	@Override
 	public int loop() {
-		if (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, I really want a Bank PIN")) {
+		if (interfaces.get(14).isValid() && interfaces.getComponent(14, 34).getText().contains("Yes, ")) {
 			interfaces.getComponent(14, 34).doClick();
 			return 500;
 		} else {
