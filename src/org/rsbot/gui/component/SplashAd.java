@@ -43,6 +43,7 @@ public class SplashAd extends JDialog implements MouseListener, Runnable {
 		setUndecorated(true);
 		setTitle("Advertisement");
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		setResizable(false);
 
 		if (!sync()) {
 			dispose();

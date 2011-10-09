@@ -69,9 +69,6 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 				if (Configuration.Twitter.ENABLED) {
 					pool.execute(new TwitterUpdates());
 				}
-				if (!Preferences.getInstance().hideAds) {
-					pool.execute(new SplashAd(Chrome.this));
-				}
 				pool.execute(ScriptDeliveryNetwork.getInstance());
 				pool.execute(ScriptUserList.getInstance());
 				pool.shutdown();
@@ -84,6 +81,9 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 				toolBar.runScriptButton.setEnabled(true);
 				setVisible(true);
 				LoadScreen.quit();
+				if (!Preferences.getInstance().hideAds) {
+					new Thread(new SplashAd(Chrome.this)).start();
+				}
 				System.gc();
 			}
 		});
