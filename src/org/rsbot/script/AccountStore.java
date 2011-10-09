@@ -2,7 +2,6 @@ package org.rsbot.script;
 
 import org.rsbot.gui.AccountManager;
 import org.rsbot.security.RestrictedSecurityManager;
-import org.rsbot.util.Base64;
 import org.rsbot.util.StringUtil;
 import org.rsbot.util.io.IniParser;
 
@@ -62,7 +61,7 @@ public class AccountStore {
 	public static final Account FACEBOOK_ACCOUNT = new Account("Facebook");
 	private static final String KEY_ALGORITHM = "DESede";
 	private static final String CIPHER_TRANSFORMATION = "DESede/CBC/PKCS5Padding";
-	private static final int FORMAT_VERSION = 2;
+	private static final int FORMAT_VERSION = 3;
 
 	private final File file;
 	private byte[] digest;
@@ -151,9 +150,9 @@ public class AccountStore {
 	}
 
 	private String encrypt(final String data) {
+		final byte[] raw = StringUtil.getBytesUtf8(data);
 		if (digest == null) {
-			final byte[] enc = Base64.encodeBase64(StringUtil.getBytesUtf8(data));
-			return StringUtil.newStringUtf8(enc);
+			return StringUtil.byteArrayToHexString(raw);
 		}
 		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
@@ -162,17 +161,17 @@ public class AccountStore {
 		try {
 			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
 			cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-			enc = cipher.doFinal(StringUtil.getBytesUtf8(data));
+			enc = cipher.doFinal(raw);
 		} catch (final Exception e) {
 			throw new RuntimeException("Unable to encrypt data!");
 		}
-		return StringUtil.newStringUtf8(Base64.encodeBase64(enc));
+		return StringUtil.byteArrayToHexString(enc);
 	}
 
 	private String decrypt(final String data) throws IOException {
+		final byte[] raw = StringUtil.hexStringToByteArray(data);
 		if (digest == null) {
-			final byte[] enc = Base64.decodeBase64(StringUtil.getBytesUtf8(data));
-			return StringUtil.newStringUtf8(enc);
+			return StringUtil.newStringUtf8(raw);
 		}
 		final SecretKey key = new SecretKeySpec(digest, KEY_ALGORITHM);
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
@@ -181,7 +180,7 @@ public class AccountStore {
 		try {
 			final Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);
-			dec = cipher.doFinal(Base64.decodeBase64(data));
+			dec = cipher.doFinal(raw);
 		} catch (final Exception e) {
 			throw new IOException("Unable to decrypt data!");
 		}

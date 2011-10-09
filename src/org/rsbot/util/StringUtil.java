@@ -164,4 +164,12 @@ public class StringUtil {
 		}
 		return s.toString();
 	}
+
+	public static byte[] hexStringToByteArray(final String s) {
+		byte[] data = new byte[s.length() / 2];
+		for (int i = 0; i < s.length(); i += 2) {
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
+		}
+		return data;
+	}
 }
