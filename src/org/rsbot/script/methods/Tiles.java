@@ -90,11 +90,15 @@ public class Tiles extends MethodProvider {
 			return false;
 		}
 		try {
-			methods.mouse.move(point, 5, 5);
-			return methods.menu.click(action, option);
-		} catch (Exception e) {
-			return false;
+			for (int i = 0; i < 4; i++) {
+				methods.mouse.move(point, 5, 5);
+				if (methods.menu.click(action, option)) {
+					return true;
+				}
+			}
+		} catch (Exception ignored) {
 		}
+		return false;
 	}
 
 
