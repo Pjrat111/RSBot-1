@@ -53,6 +53,7 @@ public class AccountManager extends JDialog implements ActionListener {
 		try {
 			accountStore.load();
 		} catch (final IOException ignored) {
+			log.warning("Could not load accounts");
 		}
 	}
 
@@ -211,8 +212,7 @@ public class AccountManager extends JDialog implements ActionListener {
 				try {
 					accountStore.save();
 				} catch (final IOException ioe) {
-					ioe.printStackTrace();
-					log.info("Failed to save accounts...  Please report this.");
+					log.info("Could not save accounts: " + ioe.getMessage());
 				}
 				dispose();
 			} else if (button.getToolTipText().equals("Add")) {
