@@ -174,10 +174,6 @@ public class ClientLoader {
 		return copy;
 	}
 
-	public static String getTargetName() {
-		return "runescape";
-	}
-
 	public boolean isOutdated() {
 		return version[2] > version[1];
 	}
@@ -211,7 +207,16 @@ public class ClientLoader {
 		}
 	}
 
-	private static String getTargetHost() {
-		return "world" + (1 + new Random().nextInt(169)) + "." + getTargetName() + ".com";
+	public static String getTargetName() {
+		String target = Configuration.Paths.URLs.GAME;
+		return target.substring(0, target.indexOf('.'));
+	}
+
+	public static String getTargetHost() {
+		return getTargetHost(Integer.toString(1 + new Random().nextInt(169)));
+	}
+
+	public static String getTargetHost(final String world) {
+		return "world" + world + "." + Configuration.Paths.URLs.GAME;
 	}
 }

@@ -2,6 +2,7 @@ package org.rsbot.bot;
 
 import org.rsbot.Configuration;
 import org.rsbot.gui.Chrome;
+import org.rsbot.loader.ClientLoader;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
@@ -28,15 +29,14 @@ public class BotStub implements AppletStub, AppletContext {
 	private boolean isActive;
 	private final Map<String, String> parameters;
 
-	public static Crawler crawler;
-
 	public BotStub(final RSLoader applet) {
 		this.applet = applet;
+		final Crawler crawler = new Crawler("http://www." + Configuration.Paths.URLs.GAME + "/");
 		parameters = crawler.getParameters();
-		final String world_prefix = crawler.getWorldPrefix();
+		final String host = "http://" + ClientLoader.getTargetHost(crawler.getWorldPrefix());
 		try {
-			codeBase = new URL("http://world" + world_prefix + "." + applet.getTargetName() + ".com");
-			documentBase = new URL("http://world" + world_prefix + "." + applet.getTargetName() + ".com/m0");
+			codeBase = new URL(host);
+			documentBase = new URL(host + "/m0");
 		} catch (final MalformedURLException e) {
 			throw new RuntimeException(e);
 		}

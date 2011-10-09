@@ -1,6 +1,7 @@
 package org.rsbot.bot;
 
 import org.rsbot.Application;
+import org.rsbot.Configuration;
 import org.rsbot.client.Loader;
 import org.rsbot.loader.ClientLoader;
 
@@ -23,7 +24,6 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	private Applet client;
 
 	private Runnable loadedCallback;
-	private String targetName;
 	private Dimension size = Application.getPanelSize();
 	/**
 	 * The game class loader
@@ -72,8 +72,7 @@ public class RSLoader extends Applet implements Runnable, Loader {
 	public void load() {
 		try {
 			final ClientLoader cl = ClientLoader.getInstance();
-			targetName = ClientLoader.getTargetName();
-			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + targetName + ".com/"));
+			classLoader = new RSClassLoader(cl.getClasses(), new URL("http://" + Configuration.Paths.URLs.GAME + "/"));
 		} catch (final IOException ex) {
 			log.severe("Unable to load client: " + ex.getMessage());
 		}
@@ -81,10 +80,6 @@ public class RSLoader extends Applet implements Runnable, Loader {
 
 	public void setCallback(final Runnable r) {
 		loadedCallback = r;
-	}
-
-	public String getTargetName() {
-		return targetName;
 	}
 
 	/**

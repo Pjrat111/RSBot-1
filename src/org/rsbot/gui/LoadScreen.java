@@ -1,8 +1,6 @@
 package org.rsbot.gui;
 
 import org.rsbot.Configuration;
-import org.rsbot.bot.BotStub;
-import org.rsbot.bot.Crawler;
 import org.rsbot.gui.component.Messages;
 import org.rsbot.loader.ClientLoader;
 import org.rsbot.log.LabelLogHandler;
@@ -216,8 +214,6 @@ public final class LoadScreen extends JDialog {
 			log.info("Loading game client");
 			try {
 				ClientLoader.getInstance().load();
-				log.info("Crawling game");
-				BotStub.crawler = new Crawler("http://www." + ClientLoader.getTargetName() + ".com/");
 			} catch (final Exception e) {
 				log.severe("Client error: " + e.getMessage());
 				pass = false;

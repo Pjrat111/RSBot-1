@@ -95,9 +95,6 @@ public class Bot {
 		try {
 			loader.paint(image.getGraphics());
 			loader.load();
-			if (loader.getTargetName() == null) {
-				return;
-			}
 			botStub = new BotStub(loader);
 			loader.setStub(botStub);
 			eventManager.start();
