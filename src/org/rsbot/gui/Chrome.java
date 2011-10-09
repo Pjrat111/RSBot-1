@@ -175,6 +175,8 @@ public class Chrome extends JFrame implements ActionListener, ScriptListener {
 					} else if (option.equals(Messages.DISABLETHEME)) {
 						Preferences.getInstance().theme = !((JCheckBoxMenuItem) evt.getSource()).isSelected();
 						log.info("Themes will be " + (Preferences.getInstance().theme ? "enabled" : "disabled") + " next time you run the application");
+					} else if (option.equals(Messages.DISABLEADS)) {
+						Preferences.getInstance().hideAds = ((JCheckBoxMenuItem) evt.getSource()).isSelected();
 					}
 				}
 			}

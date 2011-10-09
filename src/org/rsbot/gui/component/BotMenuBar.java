@@ -74,7 +74,8 @@ public class BotMenuBar extends JMenuBar {
 						Messages.TOGGLEFALSE + Messages.DISABLEANTIRANDOMS,
 						Messages.TOGGLEFALSE + Messages.DISABLEAUTOLOGIN,
 						Messages.MENUSEPERATOR,
-						Messages.TOGGLEFALSE + Messages.DISABLETHEME},
+						Messages.TOGGLEFALSE + Messages.DISABLETHEME,
+						(Preferences.getInstance().hideAds ? Messages.TOGGLETRUE : Messages.TOGGLEFALSE) + Messages.DISABLEADS},
 				constructDebugs(), {Messages.LICENSES}, {Messages.SITE, Messages.PROJECT, Messages.LICENSE, Messages.ABOUT}};
 	}
 

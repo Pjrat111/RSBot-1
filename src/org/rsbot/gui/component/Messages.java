@@ -24,7 +24,7 @@ public class Messages {
 	public static final String FORCEINPUT = "Force Input";
 	public static final String DISABLEANTIRANDOMS = "Disable Randoms";
 	public static final String DISABLEAUTOLOGIN = "Disable Login";
-	public static final String DISABLEADS = "Disable advertisments";
+	public static final String DISABLEADS = "Disable Ads";
 	public static final String LESSCPU = "Less CPU";
 	public static final String DISABLECANVAS = "Disable Canvas";
 	public static final String DISABLETHEME = "Disable Theme";
